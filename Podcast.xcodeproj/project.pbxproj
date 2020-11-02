@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D18A729255069C400EE64AA /* PodcastsSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D18A728255069C400EE64AA /* PodcastsSearchController.swift */; };
 		3D1D5C29254F985F00E4807A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D5C28254F985F00E4807A /* AppDelegate.swift */; };
 		3D1D5C2B254F985F00E4807A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D5C2A254F985F00E4807A /* SceneDelegate.swift */; };
 		3D1D5C30254F985F00E4807A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D1D5C2E254F985F00E4807A /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3D18A728255069C400EE64AA /* PodcastsSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsSearchController.swift; sourceTree = "<group>"; };
 		3D1D5C25254F985F00E4807A /* Podcast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Podcast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1D5C28254F985F00E4807A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D1D5C2A254F985F00E4807A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +41,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D18A727255069A600EE64AA /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3D1D5C40254F98E500E4807A /* MainTabBarController.swift */,
+				3D18A728255069C400EE64AA /* PodcastsSearchController.swift */,
+				3D1D5C3D254F98CF00E4807A /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		3D1D5C1C254F985F00E4807A = {
 			isa = PBXGroup;
 			children = (
@@ -58,10 +70,9 @@
 		3D1D5C27254F985F00E4807A /* Podcast */ = {
 			isa = PBXGroup;
 			children = (
+				3D18A727255069A600EE64AA /* Controllers */,
 				3D1D5C28254F985F00E4807A /* AppDelegate.swift */,
 				3D1D5C2A254F985F00E4807A /* SceneDelegate.swift */,
-				3D1D5C40254F98E500E4807A /* MainTabBarController.swift */,
-				3D1D5C3D254F98CF00E4807A /* ViewController.swift */,
 				3D1D5C2E254F985F00E4807A /* Main.storyboard */,
 				3D1D5C31254F986200E4807A /* Assets.xcassets */,
 				3D1D5C33254F986200E4807A /* LaunchScreen.storyboard */,
@@ -140,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D18A729255069C400EE64AA /* PodcastsSearchController.swift in Sources */,
 				3D1D5C3E254F98CF00E4807A /* ViewController.swift in Sources */,
 				3D1D5C29254F985F00E4807A /* AppDelegate.swift in Sources */,
 				3D1D5C41254F98E500E4807A /* MainTabBarController.swift in Sources */,

@@ -18,8 +18,8 @@ class MainTabBarController: UITabBarController {
     // MARK: - Helper
     func configureUI() {
         viewControllers = [
-            generateNavigationController(with: ViewController(), title: "Favorites", image: "play.circle.fill", tag: 0),
-            generateNavigationController(with: ViewController(), title: "Search", image: "magnifyingglass", tag: 1),
+            generateNavigationController(with: PodcastsSearchController(), title: "Search", image: "magnifyingglass", tag: 0),
+            generateNavigationController(with: ViewController(), title: "Favorites", image: "play.circle.fill", tag: 1),
             generateNavigationController(with: ViewController(), title: "Downloads", image: "square.stack.fill", tag: 2)
         ]
     }
