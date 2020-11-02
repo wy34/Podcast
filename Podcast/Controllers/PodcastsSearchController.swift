@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class PodcastsSearchController: UITableViewController {
     // MARK: - Properties
@@ -56,10 +57,19 @@ extension PodcastsSearchController {
     }
 }
 
-
 // MARK: - SearchController Extension
 extension PodcastsSearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("changed")
+        let url = "https://itunes.apple.com/search?term=\(searchText)"
+        AF.request(url).responseData { (dataResponse) in
+            if let err = dataResponse.error {
+                print("Failed to contact yahoo", err)
+                return
+            }
+            
+            guard let data = dataResponse.data else { return }
+            let dummyString = String(data: data, encoding: .utf8)
+            print(dummyString ?? "")
+        }
     }
 }
