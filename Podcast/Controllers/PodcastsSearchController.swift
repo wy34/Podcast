@@ -16,9 +16,12 @@ class PodcastsSearchController: UITableViewController {
     
     let cellId = "cellId"
     
+    private lazy var searchController = UISearchController(searchResultsController: nil)
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupSearchBar()
         configureTableView()
     }
     
@@ -26,9 +29,16 @@ class PodcastsSearchController: UITableViewController {
     func configureTableView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
     }
+    
+    func setupSearchBar() {
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.delegate = self
+        searchController.obscuresBackgroundDuringPresentation = false
+    }
 }
 
-// MARK: - Extension
+// MARK: - TableView Extension
 extension PodcastsSearchController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return podcasts.count
@@ -43,5 +53,13 @@ extension PodcastsSearchController {
         cell.imageView?.image = #imageLiteral(resourceName: "appicon")
         
         return cell
+    }
+}
+
+
+// MARK: - SearchController Extension
+extension PodcastsSearchController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("changed")
     }
 }
