@@ -60,40 +60,9 @@ extension PodcastsSearchController {
 // MARK: - SearchController Extension
 extension PodcastsSearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let url = "https://itunes.apple.com/search"
-        let parameters = ["term": searchText, "media": "podcast"]
-        
-        AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
-            if let err = dataResponse.error {
-                print("Failed to contact yahoo", err)
-                return
-            }
-            
-            guard let data = dataResponse.data else { return }
-            
-            do {
-                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
-                self.podcasts = searchResult.results
-                self.tableView.reloadData()
-            } catch let decodeErr {
-                print("Failed to decode:", decodeErr)
-            }
+        APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
+            self.podcasts = podcasts
+            self.tableView.reloadData()
         }
-//        AF.request(url).responseData { (dataResponse) in
-//            if let err = dataResponse.error {
-//                print("Failed to contact yahoo", err)
-//                return
-//            }
-//
-//            guard let data = dataResponse.data else { return }
-//
-//            do {
-//                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
-//                self.podcasts = searchResult.results
-//                self.tableView.reloadData()
-//            } catch let decodeErr {
-//                print("Failed to decode:", decodeErr)
-//            }
-//        }
     }
 }
