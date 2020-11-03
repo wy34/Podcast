@@ -10,9 +10,9 @@ import Alamofire
 
 class PodcastsSearchController: UITableViewController {
     // MARK: - Properties
-    let podcasts = [
-        Podcast(name: "Lets Build That App", artist: "Brian Voong"),
-        Podcast(name: "Some Podcast", artist: "Some Author")
+    var podcasts = [
+        Podcast(trackName: "Lets Build That App", artistName: "Brian Voong"),
+        Podcast(trackName: "Some Podcast", artistName: "Some Author")
     ]
     
     let cellId = "cellId"
@@ -49,7 +49,7 @@ extension PodcastsSearchController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
         
         let podcast =  podcasts[indexPath.row]
-        cell.textLabel?.text = "\(podcast.name)\n\(podcast.artist)"
+        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
         cell.textLabel?.numberOfLines = -1
         cell.imageView?.image = #imageLiteral(resourceName: "appicon")
         
@@ -60,16 +60,40 @@ extension PodcastsSearchController {
 // MARK: - SearchController Extension
 extension PodcastsSearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let url = "https://itunes.apple.com/search?term=\(searchText)"
-        AF.request(url).responseData { (dataResponse) in
+        let url = "https://itunes.apple.com/search"
+        let parameters = ["term": searchText, "media": "podcast"]
+        
+        AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
             if let err = dataResponse.error {
                 print("Failed to contact yahoo", err)
                 return
             }
             
             guard let data = dataResponse.data else { return }
-            let dummyString = String(data: data, encoding: .utf8)
-            print(dummyString ?? "")
+            
+            do {
+                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
+                self.podcasts = searchResult.results
+                self.tableView.reloadData()
+            } catch let decodeErr {
+                print("Failed to decode:", decodeErr)
+            }
         }
+//        AF.request(url).responseData { (dataResponse) in
+//            if let err = dataResponse.error {
+//                print("Failed to contact yahoo", err)
+//                return
+//            }
+//
+//            guard let data = dataResponse.data else { return }
+//
+//            do {
+//                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
+//                self.podcasts = searchResult.results
+//                self.tableView.reloadData()
+//            } catch let decodeErr {
+//                print("Failed to decode:", decodeErr)
+//            }
+//        }
     }
 }
