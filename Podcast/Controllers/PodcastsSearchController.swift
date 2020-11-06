@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Alamofire
 
 class PodcastsSearchController: UITableViewController {
     // MARK: - Properties
@@ -14,8 +13,6 @@ class PodcastsSearchController: UITableViewController {
         Podcast(trackName: "Lets Build That App", artistName: "Brian Voong"),
         Podcast(trackName: "Some Podcast", artistName: "Some Author")
     ]
-    
-    let cellId = "cellId"
     
     private lazy var searchController = UISearchController(searchResultsController: nil)
     
@@ -28,7 +25,8 @@ class PodcastsSearchController: UITableViewController {
     
     // MARK: - Helpers
     func configureTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(PodcastCell.self, forCellReuseIdentifier: PodcastCell.reuseId)
+        tableView.rowHeight = 132
     }
     
     func setupSearchBar() {
@@ -46,13 +44,9 @@ extension PodcastsSearchController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: PodcastCell.reuseId, for: indexPath) as! PodcastCell
         let podcast =  podcasts[indexPath.row]
-        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
-        cell.textLabel?.numberOfLines = -1
-        cell.imageView?.image = #imageLiteral(resourceName: "appicon")
-        
+        cell.podcast = podcast
         return cell
     }
 }

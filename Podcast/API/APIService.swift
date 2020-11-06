@@ -30,21 +30,5 @@ class APIService {
                 print("Failed to decode:", decodeErr)
             }
         }
-//        AF.request(url).responseData { (dataResponse) in
-//            if let err = dataResponse.error {
-//                print("Failed to contact yahoo", err)
-//                return
-//            }
-//
-//            guard let data = dataResponse.data else { return }
-//
-//            do {
-//                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
-//                self.podcasts = searchResult.results
-//                self.tableView.reloadData()
-//            } catch let decodeErr {
-//                print("Failed to decode:", decodeErr)
-//            }
-//        }
     }
 }
