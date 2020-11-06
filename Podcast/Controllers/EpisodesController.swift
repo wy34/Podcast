@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FeedKit
 
 class EpisodesController: UITableViewController {
     // MARK: - Properties
@@ -13,6 +14,7 @@ class EpisodesController: UITableViewController {
         didSet {
             guard let podcast = podcast else { return }
             navigationItem.title = podcast.trackName
+            fetchEpisodes()
         }
     }
     
@@ -30,6 +32,32 @@ class EpisodesController: UITableViewController {
     func configureTableView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.tableFooterView = UIView()
+    }
+    
+    func fetchEpisodes() {
+        guard let feedUrl = podcast?.feedUrl else { return }
+        guard let url = URL(string: feedUrl) else { return }
+        let parser = FeedParser(URL: url)
+        parser.parseAsync(result: {(result) in
+            switch result {
+                case .success(let feed):
+                    var episodes = [Episode]()
+                    
+                    let rssFeed = feed.rssFeed
+                    rssFeed?.items?.forEach({ (feedItem) in
+                        let episode = Episode(title: feedItem.title ?? "")
+                        episodes.append(episode)
+                    })
+                
+                    DispatchQueue.main.async {
+                        self.episodes = episodes
+                        self.tableView.reloadData()
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    break
+            }
+        })
     }
 }
 
