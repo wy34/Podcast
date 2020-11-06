@@ -9,10 +9,7 @@ import UIKit
 
 class PodcastsSearchController: UITableViewController {
     // MARK: - Properties
-    var podcasts = [
-        Podcast(trackName: "Lets Build That App", artistName: "Brian Voong"),
-        Podcast(trackName: "Some Podcast", artistName: "Some Author")
-    ]
+    var podcasts = [Podcast]()
     
     private lazy var searchController = UISearchController(searchResultsController: nil)
     
@@ -27,6 +24,7 @@ class PodcastsSearchController: UITableViewController {
     func configureTableView() {
         tableView.register(PodcastCell.self, forCellReuseIdentifier: PodcastCell.reuseId)
         tableView.rowHeight = 132
+        tableView.tableFooterView = UIView()
     }
     
     func setupSearchBar() {
@@ -48,6 +46,18 @@ extension PodcastsSearchController {
         let podcast =  podcasts[indexPath.row]
         cell.podcast = podcast
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.text = "Please enter a Search Term"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        return label
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return podcasts.count == 0 ? 250 : 0
     }
 }
 

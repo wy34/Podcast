@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PodcastCell: UITableViewCell {
     // MARK: - Properties
@@ -16,13 +17,15 @@ class PodcastCell: UITableViewCell {
             guard let podcast = podcast else { return }
             trackNameLabel.text = podcast.trackName
             artistNameLabel.text = podcast.artistName
+            episodeCountLabel.text = "\(podcast.trackCount ?? 0) Episodes"
             
+            guard let url = URL(string: podcast.artworkUrl600 ?? "") else { return }
+            podcastImageView.sd_setImage(with: url, completed: nil)
         }
     }
     
     private let podcastImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "appicon")
         return iv
     }()
     
