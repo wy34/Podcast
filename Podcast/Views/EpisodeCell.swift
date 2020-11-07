@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class EpisodeCell: UITableViewCell {
     // MARK: - Properties
@@ -20,12 +21,14 @@ class EpisodeCell: UITableViewCell {
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM dd, yyyy"
             pubDateLabel.text = formatter.string(from: episode.pubDate)
+            
+            guard let url = URL(string: episode.imageUrl ?? "") else { return }
+            episodeImageView.sd_setImage(with: url, completed: nil)
         }
     }
     
     private let episodeImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "appicon")
         return iv
     }()
     
