@@ -18,6 +18,7 @@
 		3D1D5C41254F98E500E4807A /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1D5C40254F98E500E4807A /* MainTabBarController.swift */; };
 		3D2487C22555EED10070A117 /* EpisodesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487C12555EED10070A117 /* EpisodesController.swift */; };
 		3D2487C62555F2290070A117 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487C52555F2290070A117 /* Episode.swift */; };
+		3D2487CE255621910070A117 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487CD255621910070A117 /* EpisodeCell.swift */; };
 		3DB23FD12554D14C006C8336 /* PodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB23FD02554D14C006C8336 /* PodcastCell.swift */; };
 		3DB23FD52554D224006C8336 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB23FD42554D224006C8336 /* UIView.swift */; };
 		3DB23FDA2554D4CE006C8336 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB23FD92554D4CE006C8336 /* CustomLabel.swift */; };
@@ -41,6 +42,7 @@
 		3D1D5C40254F98E500E4807A /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		3D2487C12555EED10070A117 /* EpisodesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesController.swift; sourceTree = "<group>"; };
 		3D2487C52555F2290070A117 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
+		3D2487CD255621910070A117 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		3DB23FD02554D14C006C8336 /* PodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastCell.swift; sourceTree = "<group>"; };
 		3DB23FD42554D224006C8336 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		3DB23FD92554D4CE006C8336 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				3DB23FD02554D14C006C8336 /* PodcastCell.swift */,
+				3D2487CD255621910070A117 /* EpisodeCell.swift */,
 				3DB23FD92554D4CE006C8336 /* CustomLabel.swift */,
 			);
 			path = Views;
@@ -286,6 +289,7 @@
 				3D1D5C41254F98E500E4807A /* MainTabBarController.swift in Sources */,
 				3DBD15412551DA8B00D60F3D /* APIService.swift in Sources */,
 				3DB23FD12554D14C006C8336 /* PodcastCell.swift in Sources */,
+				3D2487CE255621910070A117 /* EpisodeCell.swift in Sources */,
 				3D1D5C2B254F985F00E4807A /* SceneDelegate.swift in Sources */,
 				3D2487C22555EED10070A117 /* EpisodesController.swift in Sources */,
 			);

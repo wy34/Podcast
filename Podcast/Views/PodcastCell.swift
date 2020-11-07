@@ -29,7 +29,7 @@ class PodcastCell: UITableViewCell {
         return iv
     }()
     
-    private let trackNameLabel = CustomLabel(withText:  "Track Name", isBolded: true, fontSize: 18, isTrackName: true)
+    private let trackNameLabel = CustomLabel(withText:  "Track Name", isBolded: true, fontSize: 18, isMultiLine: true)
     private let artistNameLabel = CustomLabel(withText: "Artist Name")
     private let episodeCountLabel = CustomLabel(withText: "Episode Count")
     

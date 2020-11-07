@@ -9,11 +9,11 @@ import UIKit
 
 class CustomLabel: UILabel {
     // MARK: - Init
-    init(withText t: String, isBolded: Bool = false, fontSize: CGFloat = 16, isTrackName: Bool = false) {
+    init(withText t: String, isBolded: Bool = false, fontSize: CGFloat = 16, isMultiLine: Bool = false) {
         super.init(frame: .zero)
         text = t
         
-        if isTrackName {
+        if isMultiLine {
             numberOfLines = 2
         }
         

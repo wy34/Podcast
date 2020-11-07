@@ -18,9 +18,7 @@ class EpisodesController: UITableViewController {
         }
     }
     
-    var episodes = [Episode(title: "First Episode"), Episode(title: "Second Episode"), Episode(title: "Third Episode")]
-    
-    fileprivate let cellId = "cellId"
+    var episodes = [Episode]()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -30,8 +28,9 @@ class EpisodesController: UITableViewController {
     
     // MARK: - Helper
     func configureTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(EpisodeCell.self, forCellReuseIdentifier: EpisodeCell.reuseId)
         tableView.tableFooterView = UIView()
+        tableView.rowHeight = 132
     }
     
     func fetchEpisodes() {
@@ -45,7 +44,7 @@ class EpisodesController: UITableViewController {
                     
                     let rssFeed = feed.rssFeed
                     rssFeed?.items?.forEach({ (feedItem) in
-                        let episode = Episode(title: feedItem.title ?? "")
+                        let episode = Episode(feedItem: feedItem)
                         episodes.append(episode)
                     })
                 
@@ -68,9 +67,9 @@ extension EpisodesController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeCell.reuseId, for: indexPath) as! EpisodeCell
         let episode = episodes[indexPath.row]
-        cell.textLabel?.text = "\(episode.title)"
+        cell.episode = episode
         return cell
     }
 }
