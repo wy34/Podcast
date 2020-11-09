@@ -57,6 +57,15 @@ extension EpisodesController {
         return cell
     }
     
-    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = self.episodes[indexPath.row]
+        
+        if let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first {
+            let playerDetailsView = PlayerDetailsView()
+            playerDetailsView.episode = episode
+            playerDetailsView.frame = self.view.frame
+            keyWindow.addSubview(playerDetailsView)
+        }
+    }
 }
 
