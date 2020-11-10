@@ -15,7 +15,7 @@ class PlayerDetailsView: UIView {
         didSet {
             guard  let episode = episode else { return }
                  
-            titleLabel.text = episode.title
+            titleLabel.text = episode.title 
             
             guard let imageUrl = episode.imageUrl, let url = URL(string: imageUrl) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
@@ -38,7 +38,14 @@ class PlayerDetailsView: UIView {
         return button
     }()
     
-    private let episodeImageView = UIImageView(image: #imageLiteral(resourceName: "appicon"))
+    private let episodeImageView: UIImageView = {
+        let iv = UIImageView(image: #imageLiteral(resourceName: "appicon"))
+        let scale: CGFloat = 0.7
+        iv.transform = CGAffineTransform(scaleX: scale, y: scale)
+        iv.layer.cornerRadius = 5
+        iv.clipsToBounds = true
+        return iv
+    }()
 
     private let durationSlider: UISlider = {
         let slider = UISlider()
@@ -56,7 +63,7 @@ class PlayerDetailsView: UIView {
     }()
     
     private let titleLabel = AlignedTextLabel(withText: "Episode Title", textColor: .black, isBolded: true, andAlignment: .center)
-    private let artistLabel = AlignedTextLabel(withText: "Author", textColor: #colorLiteral(red: 0.7270483375, green: 0.4584427476, blue: 0.8369832635, alpha: 1), isBolded: true, andAlignment: .center)
+    let artistLabel = AlignedTextLabel(withText: "Author", textColor: #colorLiteral(red: 0.7270483375, green: 0.4584427476, blue: 0.8369832635, alpha: 1), isBolded: true, andAlignment: .center)
     
     private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
     private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
@@ -101,6 +108,7 @@ class PlayerDetailsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
+        enlargeEpisodeImageView()
     }
     
     required init?(coder: NSCoder) {
@@ -108,6 +116,22 @@ class PlayerDetailsView: UIView {
     }
     
     // MARK: - Helpers
+    func scaleEpisodeImageView() {
+        let scale: CGFloat = 0.7
+        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.episodeImageView.transform = self.player.timeControlStatus == .playing ? .identity : CGAffineTransform(scaleX: scale, y: scale)
+        }
+    }
+    
+    
+    func enlargeEpisodeImageView() {
+        let time = CMTime(value: 1, timescale: 3)
+        let times = [NSValue(time: time)]
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+            self.scaleEpisodeImageView()
+        }
+    }
+    
     func configureUI() {
         backgroundColor = .white
         addSubviews(detailStackView)
@@ -131,11 +155,13 @@ class PlayerDetailsView: UIView {
         guard let url = URL(string: episode?.streamUrl ?? "") else { return }
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
+        player.volume = 0.5
         player.play()
     }
 
     // MARK: - Selector
     @objc func handleDismiss() {
+        player.pause()
         self.removeFromSuperview()
     }
     
@@ -157,6 +183,8 @@ class PlayerDetailsView: UIView {
             player.pause()
             playPauseBtn.setImage(UIImage(systemName: "play.fill",  withConfiguration: largeButton), for: .normal)
         }
+        
+        scaleEpisodeImageView()
     }
     
     @objc func didChangeVolume() {

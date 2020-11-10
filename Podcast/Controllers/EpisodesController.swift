@@ -63,6 +63,7 @@ extension EpisodesController {
         if let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first {
             let playerDetailsView = PlayerDetailsView()
             playerDetailsView.episode = episode
+            playerDetailsView.artistLabel.text = podcast?.artistName
             playerDetailsView.frame = self.view.frame
             keyWindow.addSubview(playerDetailsView)
         }
