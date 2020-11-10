@@ -52,7 +52,7 @@ class PlayerDetailsView: UIView {
     
     private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
     private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
-    private let playPause = UIButton.createControlButton(withImage: "play.fill")
+    private let playPause = UIButton.createControlButton(withImage: "play.fill", andImageSize: 45)
 
     private lazy var buttonStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [backwardsBtn, playPause, forwardsBtn])
@@ -71,6 +71,7 @@ class PlayerDetailsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
+        artistLabel.backgroundColor = .red
     }
     
     required init?(coder: NSCoder) {
@@ -87,7 +88,11 @@ class PlayerDetailsView: UIView {
         episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.9, hMult: 0.9)
         durationSlider.setDimension(width: episodeImageView.widthAnchor, height: heightAnchor, hMult: 0.05)
         timeLabelStack.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
+        timeLabelStack.setDimension(height: heightAnchor, hMult: 0.05)
         titleLabel.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
+        titleLabel.setDimension(height: heightAnchor, hMult: 0.08)
+        artistLabel.setDimension(height: heightAnchor, hMult: 0.05)
+//        buttonStack.setDimension(width: widthAnchor, height: heightAnchor, wMult: 0.75, hMult: 0.3)
     }
     
     // MARK: - Selector
