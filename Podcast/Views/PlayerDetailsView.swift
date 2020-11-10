@@ -7,19 +7,27 @@
 
 import UIKit
 import SDWebImage
+import AVKit
 
 class PlayerDetailsView: UIView {
     // MARK: - Properties
     var episode: Episode? {
         didSet {
             guard  let episode = episode else { return }
-            
+                 
             titleLabel.text = episode.title
             
             guard let imageUrl = episode.imageUrl, let url = URL(string: imageUrl) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
+            playEpisode()
         }
     }
+    
+    private let player: AVPlayer = {
+        let avPlayer = AVPlayer()
+        avPlayer.automaticallyWaitsToMinimizeStalling = false
+        return avPlayer
+    }()
     
     private lazy var dismissButton: UIButton = {
         let button = UIButton(type: .system)
@@ -52,12 +60,14 @@ class PlayerDetailsView: UIView {
     
     private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
     private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
-    private let playPauseBtn = UIButton.createControlButton(withImage: "play.fill", andSize: 45)
+    private let playPauseBtn = UIButton.createControlButton(withImage: "pause.fill", andSize: 45)
 
     private lazy var buttonStack: UIStackView = {
+        playPauseBtn.addTarget(self, action: #selector(handlePlayPause), for: .touchUpInside)
+        backwardsBtn.addTarget(self, action: #selector(handleBackwards), for: .touchUpInside)
+        forwardsBtn.addTarget(self, action: #selector(handleForwards), for: .touchUpInside)
         let stack = UIStackView(arrangedSubviews: [backwardsBtn, playPauseBtn, forwardsBtn])
         stack.distribution = .fillEqually
-//        stack.alignment = .center
         return stack
     }()
     
@@ -88,10 +98,6 @@ class PlayerDetailsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-//        backwardsBtn.backgroundColor = .red
-//        forwardsBtn.backgroundColor = .blue
-//        playPauseBtn.backgroundColor = .orange
-//        volumeSlider.backgroundColor = .purple
     }
     
     required init?(coder: NSCoder) {
@@ -118,8 +124,36 @@ class PlayerDetailsView: UIView {
         volumeStack.setDimension(height: heightAnchor, hMult: 0.05)
     }
     
+    func playEpisode() {
+        guard let url = URL(string: episode?.streamUrl ?? "") else { return }
+        let playerItem = AVPlayerItem(url: url)
+        player.replaceCurrentItem(with: playerItem)
+        player.volume = 0.25
+        player.play()
+    }
+
     // MARK: - Selector
     @objc func handleDismiss() {
         self.removeFromSuperview()
+    }
+    
+    @objc func handleBackwards() {
+        
+    }
+    
+    @objc func handleForwards() {
+        
+    }
+    
+    @objc func handlePlayPause() {
+        let largeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 45))
+        
+        if player.timeControlStatus == .paused {
+            player.play()
+            playPauseBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: largeButton), for: .normal)
+        } else {
+            player.pause()
+            playPauseBtn.setImage(UIImage(systemName: "pause.fill",  withConfiguration: largeButton), for: .normal)
+        }
     }
 }
