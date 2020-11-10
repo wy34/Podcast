@@ -9,15 +9,15 @@ import UIKit
 
 class CustomLabel: UILabel {
     // MARK: - Init
-    init(withText t: String, isBolded: Bool = false, fontSize: CGFloat = 16, isMultiLine: Bool = false) {
+    init(withText t: String, isBolded bold: Bool = false, fontSize: CGFloat = 16, isMultiLine multiLine: Bool = false) {
         super.init(frame: .zero)
         text = t
         
-        if isMultiLine {
+        if multiLine {
             numberOfLines = 2
         }
         
-        if isBolded {
+        if bold {
             font = UIFont.boldSystemFont(ofSize: fontSize)
         }
     }
