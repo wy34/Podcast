@@ -52,18 +52,35 @@ class PlayerDetailsView: UIView {
     
     private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
     private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
-    private let playPause = UIButton.createControlButton(withImage: "play.fill", andImageSize: 45)
+    private let playPauseBtn = UIButton.createControlButton(withImage: "play.fill", andSize: 45)
 
     private lazy var buttonStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [backwardsBtn, playPause, forwardsBtn])
+        let stack = UIStackView(arrangedSubviews: [backwardsBtn, playPauseBtn, forwardsBtn])
         stack.distribution = .fillEqually
+//        stack.alignment = .center
+        return stack
+    }()
+    
+    private let volumeSlider: UISlider = {
+        let slider = UISlider()
+        slider.value = 0.5
+        return slider
+    }()
+    
+    private let volumeDown = UIButton.createControlButton(withImage: "speaker.fill", color: .gray, andSize: 12)
+    private let volumeUp = UIButton.createControlButton(withImage: "speaker.wave.3.fill", color: .gray, andSize: 12)
+    
+    private lazy var volumeStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [volumeDown, volumeSlider, volumeUp])
+        stack.spacing = 10
         return stack
     }()
     
     private lazy var detailStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonStack])
+        let stack = UIStackView(arrangedSubviews: [dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonStack, volumeStack])
         stack.axis = .vertical
         stack.alignment = .center
+        stack.distribution = .fillProportionally
         return stack
     }()
     
@@ -71,7 +88,10 @@ class PlayerDetailsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-        artistLabel.backgroundColor = .red
+//        backwardsBtn.backgroundColor = .red
+//        forwardsBtn.backgroundColor = .blue
+//        playPauseBtn.backgroundColor = .orange
+//        volumeSlider.backgroundColor = .purple
     }
     
     required init?(coder: NSCoder) {
@@ -85,14 +105,17 @@ class PlayerDetailsView: UIView {
         detailStackView.anchor(top: safeAreaLayoutGuide.topAnchor, right: rightAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, left: leftAnchor)
         
         dismissButton.setDimension(width: widthAnchor, height: heightAnchor, wMult: 0.25, hMult: 0.06)
-        episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.9, hMult: 0.9)
+        episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.875, hMult: 0.9)
         durationSlider.setDimension(width: episodeImageView.widthAnchor, height: heightAnchor, hMult: 0.05)
         timeLabelStack.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
-        timeLabelStack.setDimension(height: heightAnchor, hMult: 0.05)
+        timeLabelStack.setDimension(height: heightAnchor, hMult: 0.03)
         titleLabel.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
-        titleLabel.setDimension(height: heightAnchor, hMult: 0.08)
-        artistLabel.setDimension(height: heightAnchor, hMult: 0.05)
-//        buttonStack.setDimension(width: widthAnchor, height: heightAnchor, wMult: 0.75, hMult: 0.3)
+        titleLabel.setDimension(height: heightAnchor, hMult: 0.06)
+        artistLabel.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
+        artistLabel.setDimension(height: heightAnchor, hMult: 0.03)
+        buttonStack.setDimension(width: widthAnchor, wMult: 0.75)
+        volumeStack.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
+        volumeStack.setDimension(height: heightAnchor, hMult: 0.05)
     }
     
     // MARK: - Selector
