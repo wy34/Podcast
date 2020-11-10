@@ -71,9 +71,12 @@ class PlayerDetailsView: UIView {
         return stack
     }()
     
-    private let volumeSlider: UISlider = {
+    private lazy var volumeSlider: UISlider = {
         let slider = UISlider()
+        slider.minimumValue = 0.0
+        slider.maximumValue = 1.0
         slider.value = 0.5
+        slider.addTarget(self, action: #selector(didChangeVolume), for: .valueChanged)
         return slider
     }()
     
@@ -128,7 +131,6 @@ class PlayerDetailsView: UIView {
         guard let url = URL(string: episode?.streamUrl ?? "") else { return }
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
-        player.volume = 0.25
         player.play()
     }
 
@@ -150,10 +152,14 @@ class PlayerDetailsView: UIView {
         
         if player.timeControlStatus == .paused {
             player.play()
-            playPauseBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: largeButton), for: .normal)
+            playPauseBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: largeButton), for: .normal)
         } else {
             player.pause()
-            playPauseBtn.setImage(UIImage(systemName: "pause.fill",  withConfiguration: largeButton), for: .normal)
+            playPauseBtn.setImage(UIImage(systemName: "play.fill",  withConfiguration: largeButton), for: .normal)
         }
+    }
+    
+    @objc func didChangeVolume() {
+        player.volume = volumeSlider.value
     }
 }
