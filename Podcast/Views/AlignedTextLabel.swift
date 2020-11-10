@@ -7,12 +7,13 @@
 
 import UIKit
 
-class EpisodeTimeLabel: CustomLabel {
+class AlignedTextLabel: CustomLabel {
     // MARK: - Init
-    init(withText t: String, andAlignment alignment: NSTextAlignment = .left) {
-        super.init(withText: t)
-        textColor = .lightGray
+    init(withText t: String, textColor color: UIColor, isBolded: Bool = false, andAlignment alignment: NSTextAlignment = .left) {
+        super.init(withText: t, isBolded: isBolded)
         textAlignment = alignment
+        textColor = color
+        numberOfLines = 2
     }
     
     required init?(coder: NSCoder) {

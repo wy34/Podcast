@@ -38,8 +38,8 @@ class PlayerDetailsView: UIView {
         return slider
     }()
     
-    let minTimeLabel: EpisodeTimeLabel = EpisodeTimeLabel(withText: "00:00:00")
-    let maxTimeLabel: EpisodeTimeLabel = EpisodeTimeLabel(withText: "99:99:99", andAlignment: .right)
+    let minTimeLabel: AlignedTextLabel = AlignedTextLabel(withText: "00:00:00", textColor: .lightGray)
+    let maxTimeLabel: AlignedTextLabel = AlignedTextLabel(withText: "99:99:99", textColor: .lightGray, andAlignment: .right)
     
     private lazy var timeLabelStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [minTimeLabel, maxTimeLabel])
@@ -47,14 +47,21 @@ class PlayerDetailsView: UIView {
         return stack
     }()
     
-    private let titleLabel: CustomLabel = {
-        let label = CustomLabel(withText: "Episode Title", isBolded: true, fontSize: 18, isMultiLine: true)
-        label.textAlignment = .center
-        return label
+    private let titleLabel = AlignedTextLabel(withText: "Episode Title", textColor: .black, isBolded: true, andAlignment: .center)
+    private let artistLabel = AlignedTextLabel(withText: "Author", textColor: #colorLiteral(red: 0.7270483375, green: 0.4584427476, blue: 0.8369832635, alpha: 1), isBolded: true, andAlignment: .center)
+    
+    private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
+    private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
+    private let playPause = UIButton.createControlButton(withImage: "play.fill")
+
+    private lazy var buttonStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [backwardsBtn, playPause, forwardsBtn])
+        stack.distribution = .fillEqually
+        return stack
     }()
     
     private lazy var detailStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel])
+        let stack = UIStackView(arrangedSubviews: [dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonStack])
         stack.axis = .vertical
         stack.alignment = .center
         return stack
