@@ -40,8 +40,7 @@ class PlayerDetailsView: UIView {
     
     private let episodeImageView: UIImageView = {
         let iv = UIImageView(image: #imageLiteral(resourceName: "appicon"))
-        let scale: CGFloat = 0.7
-        iv.transform = CGAffineTransform(scaleX: scale, y: scale)
+        iv.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         iv.layer.cornerRadius = 5
         iv.clipsToBounds = true
         return iv
@@ -54,7 +53,7 @@ class PlayerDetailsView: UIView {
     }()
     
     let minTimeLabel: AlignedTextLabel = AlignedTextLabel(withText: "00:00:00", textColor: .lightGray)
-    let maxTimeLabel: AlignedTextLabel = AlignedTextLabel(withText: "99:99:99", textColor: .lightGray, andAlignment: .right)
+    let maxTimeLabel: AlignedTextLabel = AlignedTextLabel(withText: "--:--:--", textColor: .lightGray, andAlignment: .right)
     
     private lazy var timeLabelStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [minTimeLabel, maxTimeLabel])
@@ -82,7 +81,7 @@ class PlayerDetailsView: UIView {
         let slider = UISlider()
         slider.minimumValue = 0.0
         slider.maximumValue = 1.0
-        slider.value = 0.5
+        slider.value = 0.1
         slider.addTarget(self, action: #selector(didChangeVolume), for: .valueChanged)
         return slider
     }()
@@ -109,6 +108,14 @@ class PlayerDetailsView: UIView {
         super.init(frame: frame)
         configureUI()
         enlargeEpisodeImageView()
+        
+        let interval = CMTime(value: 1, timescale: 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+            self.minTimeLabel.text = time.toDisplayString()
+            
+            guard let totalTime = self.player.currentItem?.duration else { print("does not exist");return }
+            self.maxTimeLabel.text = totalTime.toDisplayString()
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -122,7 +129,6 @@ class PlayerDetailsView: UIView {
             self.episodeImageView.transform = self.player.timeControlStatus == .playing ? .identity : CGAffineTransform(scaleX: scale, y: scale)
         }
     }
-    
     
     func enlargeEpisodeImageView() {
         let time = CMTime(value: 1, timescale: 3)
@@ -141,9 +147,9 @@ class PlayerDetailsView: UIView {
         episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.875, hMult: 0.9)
         durationSlider.setDimension(width: episodeImageView.widthAnchor, height: heightAnchor, hMult: 0.05)
         timeLabelStack.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
-        timeLabelStack.setDimension(height: heightAnchor, hMult: 0.03)
+        timeLabelStack.setDimension(height: heightAnchor, hMult: 0.025)
         titleLabel.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
-        titleLabel.setDimension(height: heightAnchor, hMult: 0.06)
+        titleLabel.setDimension(height: heightAnchor, hMult: 0.1)
         artistLabel.anchor(right: durationSlider.rightAnchor, left: durationSlider.leftAnchor)
         artistLabel.setDimension(height: heightAnchor, hMult: 0.03)
         buttonStack.setDimension(width: widthAnchor, wMult: 0.75)
@@ -155,7 +161,7 @@ class PlayerDetailsView: UIView {
         guard let url = URL(string: episode?.streamUrl ?? "") else { return }
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
-        player.volume = 0.5
+        player.volume = volumeSlider.value
         player.play()
     }
 

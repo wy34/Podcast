@@ -20,6 +20,7 @@
 		3D2487C62555F2290070A117 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487C52555F2290070A117 /* Episode.swift */; };
 		3D2487CE255621910070A117 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487CD255621910070A117 /* EpisodeCell.swift */; };
 		3D2487D225562FCA0070A117 /* RSSFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2487D125562FCA0070A117 /* RSSFeed.swift */; };
+		3D59D1ED255B999400CE74D4 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D59D1EC255B999300CE74D4 /* CMTime.swift */; };
 		3D71DE1B2558F9DA0017F26A /* PlayerDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D71DE1A2558F9DA0017F26A /* PlayerDetailsView.swift */; };
 		3DB23FD12554D14C006C8336 /* PodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB23FD02554D14C006C8336 /* PodcastCell.swift */; };
 		3DB23FD52554D224006C8336 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB23FD42554D224006C8336 /* UIView.swift */; };
@@ -48,6 +49,7 @@
 		3D2487C52555F2290070A117 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		3D2487CD255621910070A117 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		3D2487D125562FCA0070A117 /* RSSFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSFeed.swift; sourceTree = "<group>"; };
+		3D59D1EC255B999300CE74D4 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		3D71DE1A2558F9DA0017F26A /* PlayerDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailsView.swift; sourceTree = "<group>"; };
 		3DB23FD02554D14C006C8336 /* PodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastCell.swift; sourceTree = "<group>"; };
 		3DB23FD42554D224006C8336 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 				3DB23FD42554D224006C8336 /* UIView.swift */,
 				3D2487D125562FCA0070A117 /* RSSFeed.swift */,
 				3DBCC27F255A56D000C6090E /* UIButton.swift */,
+				3D59D1EC255B999300CE74D4 /* CMTime.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -291,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D71DE1B2558F9DA0017F26A /* PlayerDetailsView.swift in Sources */,
+				3D59D1ED255B999400CE74D4 /* CMTime.swift in Sources */,
 				3DB23FD52554D224006C8336 /* UIView.swift in Sources */,
 				3DBCC277255A4E5700C6090E /* AlignedTextLabel.swift in Sources */,
 				3D18A729255069C400EE64AA /* PodcastsSearchController.swift in Sources */,
