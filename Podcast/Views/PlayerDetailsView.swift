@@ -52,6 +52,7 @@ class PlayerDetailsView: UIView {
         slider.tintColor = .lightGray
         let thumbImage = UIImage(systemName: "circlebadge.fill")?.withTintColor(.lightGray, renderingMode: .alwaysOriginal)
         slider.setThumbImage(thumbImage, for: .normal)
+        slider.addTarget(self, action: #selector(handleTimeSliderChanged), for: .valueChanged)
         return slider
     }()
     
@@ -88,8 +89,6 @@ class PlayerDetailsView: UIView {
     
     private lazy var volumeSlider: UISlider = {
         let slider = UISlider()
-        slider.minimumValue = 0.0
-        slider.maximumValue = 1.0
         slider.value = 0.1
         slider.tintColor = .lightGray
         slider.addTarget(self, action: #selector(didChangeVolume), for: .valueChanged)
@@ -157,7 +156,7 @@ class PlayerDetailsView: UIView {
         dismissButton.center(to: self, by: .centerX)
         dismissButton.anchor(top: safeAreaLayoutGuide.topAnchor, paddingTop: 15)
         
-        episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.75, hMult: 0.75)
+        episodeImageView.setDimension(width: widthAnchor, height: widthAnchor, wMult: 0.8, hMult: 0.8)
         episodeImageView.center(to: self, by: .centerX)
         episodeImageView.anchor(top: dismissButton.bottomAnchor, paddingTop: 10)
         
@@ -169,7 +168,7 @@ class PlayerDetailsView: UIView {
         artistLabel.anchor(top: titleLabel.bottomAnchor, right: episodeImageView.rightAnchor, left: episodeImageView.leftAnchor, paddingTop: 5)
         
         volumeStack.anchor(right: episodeImageView.rightAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, left: episodeImageView.leftAnchor, paddingBottom: 15)
-        volumeStack.anchor(bottom: safeAreaLayoutGuide.bottomAnchor, paddingBottom: 20)
+        volumeStack.anchor(bottom: safeAreaLayoutGuide.bottomAnchor, paddingBottom: 25)
         
         buttonsContainerView.anchor(top: artistLabel.bottomAnchor, right: episodeImageView.rightAnchor, bottom: volumeStack.topAnchor, left: episodeImageView.leftAnchor)
         buttonsContainerView.addSubview(buttonStack)
@@ -183,6 +182,12 @@ class PlayerDetailsView: UIView {
         player.volume = volumeSlider.value
         player.play()
     }
+    
+    func skip(amountOfTime time: Float64) {
+        let currentEpisodeTime = player.currentTime()
+        let skipTime = CMTimeMakeWithSeconds(time, preferredTimescale: 1)
+        player.seek(to: CMTimeAdd(currentEpisodeTime, skipTime))
+    }
 
     // MARK: - Selector
     @objc func handleDismiss() {
@@ -190,12 +195,21 @@ class PlayerDetailsView: UIView {
         self.removeFromSuperview()
     }
     
+    @objc func handleTimeSliderChanged() {
+        let sliderPercentage = durationSlider.value
+        guard let duration = player.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = Float64(sliderPercentage) * durationInSeconds
+        let seekTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+        player.seek(to: seekTime)
+    }
+    
     @objc func handleBackwards() {
-        
+        skip(amountOfTime: -15)
     }
     
     @objc func handleForwards() {
-        
+        skip(amountOfTime: 15)
     }
     
     @objc func handlePlayPause() {
