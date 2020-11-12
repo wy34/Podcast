@@ -119,11 +119,11 @@ class PlayerDetailsView: UIView {
     // MARK: - Helpers
     func updateEpisodeTime() {
         let interval = CMTime(value: 1, timescale: 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
-            guard let totalTime = self.player.currentItem?.duration else { return }
-            self.maxTimeLabel.text = totalTime.toDisplayString()
-            self.minTimeLabel.text = time.toDisplayString()
-            self.updateDurationSlider()
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+            guard let totalTime = self?.player.currentItem?.duration else { return }
+            self?.maxTimeLabel.text = totalTime.toDisplayString()
+            self?.minTimeLabel.text = time.toDisplayString()
+            self?.updateDurationSlider()
         }
     }
     
@@ -143,8 +143,8 @@ class PlayerDetailsView: UIView {
     func enlargeEpisodeImageView() {
         let time = CMTime(value: 1, timescale: 3)
         let times = [NSValue(time: time)]
-        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
-            self.scaleEpisodeImageView()
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
+            self?.scaleEpisodeImageView()
         }
     }
     
@@ -191,7 +191,6 @@ class PlayerDetailsView: UIView {
 
     // MARK: - Selector
     @objc func handleDismiss() {
-        player.pause()
         self.removeFromSuperview()
     }
     
