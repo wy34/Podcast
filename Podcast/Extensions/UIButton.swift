@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIButton {
-    static func createControlButton(withImage image: String, color: UIColor = .black, andSize size: CGFloat = 25) -> UIButton {
+    static func createControlButton(withImage image: String, color: UIColor = .black, andSize size: CGFloat = 20) -> UIButton {
         let button = UIButton(type: .system)
         let largeImage = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: size))
         button.setImage(UIImage(systemName: image, withConfiguration: largeImage), for: .normal)

@@ -9,8 +9,8 @@ import UIKit
 
 class AlignedTextLabel: CustomLabel {
     // MARK: - Init
-    init(withText t: String, textColor color: UIColor, isBolded: Bool = false, andAlignment alignment: NSTextAlignment = .left) {
-        super.init(withText: t, isBolded: isBolded)
+    init(withText t: String, textColor color: UIColor, isBolded: Bool = false, fontSize: CGFloat = 16, andAlignment alignment: NSTextAlignment = .left) {
+        super.init(withText: t, isBolded: isBolded, fontSize: fontSize)
         textAlignment = alignment
         textColor = color
         numberOfLines = 2

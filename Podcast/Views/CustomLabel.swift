@@ -19,6 +19,8 @@ class CustomLabel: UILabel {
         
         if bold {
             font = UIFont.boldSystemFont(ofSize: fontSize)
+        } else {
+            font = UIFont.systemFont(ofSize: fontSize)
         }
     }
     
