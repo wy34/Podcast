@@ -15,6 +15,28 @@ class PodcastsSearchController: UITableViewController {
     
     var timer: Timer?
     
+    private let searchingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Currently Searching"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        return label
+    }()
+    
+    private let searchingIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .large)
+        ai.color = .gray
+        return ai
+    }()
+
+    private lazy var searchingStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [searchingIndicator, searchingLabel])
+        stack.axis = .vertical
+        stack.spacing = -175
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,18 +88,31 @@ extension PodcastsSearchController {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return podcasts.count == 0 ? 250 : 0
+        return podcasts.count == 0 && searchController.searchBar.text == "" ? 250 : 0
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return searchingStack
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return podcasts.count == 0 && searchController.searchBar.text != "" ? 250 : 0
     }
 }
 
 // MARK: - SearchController Extension
 extension PodcastsSearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchingIndicator.startAnimating()
+        podcasts.removeAll()
+        tableView.reloadData()
+        
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
             APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
                 self.podcasts = podcasts
                 self.tableView.reloadData()
+                self.searchingIndicator.stopAnimating()
             }
         }
     }
