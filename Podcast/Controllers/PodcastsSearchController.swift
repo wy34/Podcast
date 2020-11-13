@@ -17,7 +17,6 @@ class PodcastsSearchController: UITableViewController {
     
     private let searchingLabel: UILabel = {
         let label = UILabel()
-        label.text = "Currently Searching"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         return label
@@ -103,6 +102,7 @@ extension PodcastsSearchController {
 // MARK: - SearchController Extension
 extension PodcastsSearchController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchingLabel.text = "Currently Searching..."
         searchingIndicator.startAnimating()
         podcasts.removeAll()
         tableView.reloadData()
@@ -110,8 +110,12 @@ extension PodcastsSearchController: UISearchBarDelegate {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
             APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
-                self.podcasts = podcasts
-                self.tableView.reloadData()
+                if podcasts.isEmpty {
+                    self.searchingLabel.text = "Cannot Find Podcast"
+                } else {
+                    self.podcasts = podcasts
+                    self.tableView.reloadData()
+                }
                 self.searchingIndicator.stopAnimating()
             }
         }
