@@ -61,13 +61,8 @@ extension EpisodesController {
         let episode = self.episodes[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if let keyWindow = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first {
-            let playerDetailsView = PlayerDetailsView()
-            playerDetailsView.episode = episode
-            playerDetailsView.artistLabel.text = podcast?.artistName
-            playerDetailsView.frame = self.view.frame
-            keyWindow.addSubview(playerDetailsView)
-        }
+        let mainTabBarController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController as? MainTabBarController
+        mainTabBarController?.maximizePlayerDetails(episode: episode)
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

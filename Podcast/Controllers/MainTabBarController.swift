@@ -9,6 +9,7 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     // MARK: - Properties
+    let playerDetailView = PlayerDetailsView()
     var maximizedTopAnchorConstraint: NSLayoutConstraint!
     var minimizedTopAnchorConstraint: NSLayoutConstraint!
 
@@ -17,7 +18,6 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
         configureUI()
         setupPlayerDetailsView()
-        perform(#selector(maximizePlayerDetails), with: nil, afterDelay: 1)
     }
     
     // MARK: - Helper
@@ -38,8 +38,6 @@ class MainTabBarController: UITabBarController {
     }
     
     func setupPlayerDetailsView() {
-        let playerDetailView = PlayerDetailsView()
-        playerDetailView.backgroundColor = .red
         view.insertSubview(playerDetailView, belowSubview: tabBar)
         playerDetailView.anchor(right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor)
         
@@ -47,18 +45,20 @@ class MainTabBarController: UITabBarController {
         maximizedTopAnchorConstraint.isActive = true
         minimizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -64)
     }
-    
-    // MARK: - Selectors
-    @objc func minimizePlayerDetails() {
+
+    func minimizePlayerDetails() {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.tabBar.isHidden = false
             self.maximizedTopAnchorConstraint.isActive = false
             self.minimizedTopAnchorConstraint.isActive = true
             self.view.layoutIfNeeded()
         }
     }
     
-    @objc func maximizePlayerDetails() {
+    func maximizePlayerDetails(episode: Episode?) {
+        playerDetailView.episode = episode
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.tabBar.isHidden = true
             self.maximizedTopAnchorConstraint.isActive = true
             self.maximizedTopAnchorConstraint.constant = 0
             self.minimizedTopAnchorConstraint.isActive = false

@@ -110,6 +110,7 @@ class PlayerDetailsView: UIView {
         configureUI()
         enlargeEpisodeImageView()
         updateEpisodeTime()
+        addTapGestureToMaximizeView()
     }
     
     required init?(coder: NSCoder) {
@@ -175,6 +176,10 @@ class PlayerDetailsView: UIView {
         buttonStack.center(x: buttonsContainerView.centerXAnchor, y: buttonsContainerView.centerYAnchor)
     }
     
+    func addTapGestureToMaximizeView() {
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
+    }
+    
     func playEpisode() {
         guard let url = URL(string: episode?.streamUrl ?? "") else { return }
         let playerItem = AVPlayerItem(url: url)
@@ -191,7 +196,8 @@ class PlayerDetailsView: UIView {
 
     // MARK: - Selector
     @objc func handleDismiss() {
-        self.removeFromSuperview()
+        let mainTabBarController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController as? MainTabBarController
+        mainTabBarController?.minimizePlayerDetails()
     }
     
     @objc func handleTimeSliderChanged() {
@@ -227,5 +233,10 @@ class PlayerDetailsView: UIView {
     
     @objc func didChangeVolume() {
         player.volume = volumeSlider.value
+    }
+    
+    @objc func handleTapMaximize() {
+        let mainTabBarController = UIApplication.shared.windows.filter( { $0.isKeyWindow } ).first?.rootViewController as? MainTabBarController
+        mainTabBarController?.maximizePlayerDetails(episode: nil)
     }
 }
