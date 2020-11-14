@@ -15,10 +15,12 @@ class PlayerDetailsView: UIView {
         didSet {
             guard  let episode = episode else { return }
                  
-            titleLabel.text = episode.title 
+            titleLabel.text = episode.title
+            miniTitleLabel.text = episode.title
             
             guard let imageUrl = episode.imageUrl, let url = URL(string: imageUrl) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
+            miniEpisodeImageView.sd_setImage(with: url, completed: nil)
             playEpisode()
         }
     }
@@ -29,7 +31,7 @@ class PlayerDetailsView: UIView {
         return avPlayer
     }()
     
-    private lazy var dismissButton: UIButton = {
+    lazy var dismissButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Dismiss", for: .normal)
         button.tintColor = .black
@@ -38,7 +40,7 @@ class PlayerDetailsView: UIView {
         return button
     }()
     
-    private let episodeImageView: UIImageView = {
+    let episodeImageView: UIImageView = {
         let iv = UIImageView(image: #imageLiteral(resourceName: "appicon"))
         iv.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
         iv.layer.cornerRadius = 5
@@ -104,6 +106,29 @@ class PlayerDetailsView: UIView {
         return stack
     }()
     
+    let miniPlayerView = UIView()
+    
+    private let miniEpisodeImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = #imageLiteral(resourceName: "appicon")
+        iv.layer.cornerRadius = 5
+        iv.clipsToBounds = true
+        return iv
+    }()
+    
+    private let miniTitleLabel = CustomLabel(withText: "Episode Title", isBolded: true, fontSize: 20, isMultiLine: false)
+    private let miniPlayPauseBtn = UIButton.createControlButton(withImage: "pause.fill", andSize: 18)
+    private let miniForwardBtn = UIButton.createControlButton(withImage: "goforward.15", andSize: 18)
+    
+    private lazy var miniPlayerViewStack: UIStackView = {
+        miniPlayPauseBtn.addTarget(self, action: #selector(handlePlayPause), for: .touchUpInside)
+        miniForwardBtn.addTarget(self, action: #selector(handleForwards), for: .touchUpInside)
+        let stack = UIStackView(arrangedSubviews: [miniEpisodeImageView, miniTitleLabel, miniPlayPauseBtn, miniForwardBtn])
+        stack.alignment = .center
+        stack.spacing = 8
+        return stack
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -152,7 +177,10 @@ class PlayerDetailsView: UIView {
     func configureUI() {
         backgroundColor = .white
         
-        addSubviews(dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonsContainerView, volumeStack)
+        addSubviews(miniPlayerView, dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonsContainerView, volumeStack)
+        
+        miniPlayerView.anchor(top: topAnchor, right: rightAnchor, left: leftAnchor)
+        miniPlayerView.setDimension(hConst: 64)
         
         dismissButton.center(to: self, by: .centerX)
         dismissButton.anchor(top: safeAreaLayoutGuide.topAnchor, paddingTop: 15)
@@ -174,6 +202,18 @@ class PlayerDetailsView: UIView {
         buttonsContainerView.anchor(top: artistLabel.bottomAnchor, right: episodeImageView.rightAnchor, bottom: volumeStack.topAnchor, left: episodeImageView.leftAnchor)
         buttonsContainerView.addSubview(buttonStack)
         buttonStack.center(x: buttonsContainerView.centerXAnchor, y: buttonsContainerView.centerYAnchor)
+        
+        miniPlayerView.addSubviews(miniPlayerViewStack)
+        
+        miniPlayerViewStack.anchor(top: miniPlayerView.topAnchor, right: miniPlayerView.rightAnchor, bottom: miniPlayerView.bottomAnchor, left: miniPlayerView.leftAnchor)
+
+        miniEpisodeImageView.setDimension(width: miniPlayerView.heightAnchor, height: miniPlayerView.heightAnchor, wMult: 0.8, hMult: 0.8)
+        miniEpisodeImageView.anchor(left: miniPlayerView.leftAnchor, paddingLeft: 15)
+        miniEpisodeImageView.center(to: miniPlayerView, by: .centerY)
+
+        miniForwardBtn.setDimension(width: miniPlayerView.heightAnchor, height: miniPlayerView.heightAnchor, wMult: 0.5, hMult: 0.5)
+        miniForwardBtn.anchor(right: miniPlayerView.rightAnchor, paddingRight: 15)
+        miniPlayPauseBtn.setDimension(width: miniPlayerView.heightAnchor, height: miniPlayerView.heightAnchor, wMult: 0.5, hMult: 0.5)
     }
     
     func addTapGestureToMaximizeView() {
@@ -219,13 +259,16 @@ class PlayerDetailsView: UIView {
     
     @objc func handlePlayPause() {
         let largeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 35))
+        let miniLargeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 18))
         
         if player.timeControlStatus == .paused {
             player.play()
             playPauseBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: largeButton), for: .normal)
+            miniPlayPauseBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: miniLargeButton), for: .normal)
         } else {
             player.pause()
             playPauseBtn.setImage(UIImage(systemName: "play.fill",  withConfiguration: largeButton), for: .normal)
+            miniPlayPauseBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: miniLargeButton), for: .normal)
         }
         
         scaleEpisodeImageView()

@@ -52,6 +52,10 @@ class MainTabBarController: UITabBarController {
             self.maximizedTopAnchorConstraint.isActive = false
             self.minimizedTopAnchorConstraint.isActive = true
             self.view.layoutIfNeeded()
+            
+            self.playerDetailView.dismissButton.alpha = 0
+            self.playerDetailView.episodeImageView.alpha = 0
+            self.playerDetailView.miniPlayerView.alpha = 1
         }
     }
     
@@ -63,6 +67,10 @@ class MainTabBarController: UITabBarController {
             self.maximizedTopAnchorConstraint.constant = 0
             self.minimizedTopAnchorConstraint.isActive = false
             self.view.layoutIfNeeded()
+            
+            self.playerDetailView.dismissButton.alpha = 1
+            self.playerDetailView.episodeImageView.alpha = 1
+            self.playerDetailView.miniPlayerView.alpha = 0
         }
     }
 }

@@ -10,7 +10,7 @@ import AVKit
 extension CMTime {
     func toDisplayString() -> String {
         let totalSeconds = CMTimeGetSeconds(self)
-        guard !totalSeconds.isNaN && !totalSeconds.isInfinite else { return "" }
+        guard !totalSeconds.isNaN && !totalSeconds.isInfinite else { return "--:--:--" }
         
         let seconds = Int(totalSeconds) % 60
         let minutes = (Int(totalSeconds) / 60) % 60
