@@ -22,6 +22,8 @@ class PlayerDetailsView: UIView {
             episodeImageView.sd_setImage(with: url, completed: nil)
             miniEpisodeImageView.sd_setImage(with: url, completed: nil)
             playEpisode()
+            
+            updatePlayPauseBtnImage(withImageName: "pause.fill")
         }
     }
     
@@ -233,6 +235,13 @@ class PlayerDetailsView: UIView {
         let skipTime = CMTimeMakeWithSeconds(time, preferredTimescale: 1)
         player.seek(to: CMTimeAdd(currentEpisodeTime, skipTime))
     }
+    
+    func updatePlayPauseBtnImage(withImageName name: String) {
+        let largeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 35))
+        let miniLargeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 18))
+        playPauseBtn.setImage(UIImage(systemName: name, withConfiguration: largeButton), for: .normal)
+        miniPlayPauseBtn.setImage(UIImage(systemName: name, withConfiguration: miniLargeButton), for: .normal)
+    }
 
     // MARK: - Selector
     @objc func handleDismiss() {
@@ -258,17 +267,12 @@ class PlayerDetailsView: UIView {
     }
     
     @objc func handlePlayPause() {
-        let largeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 35))
-        let miniLargeButton = UIImage.SymbolConfiguration(font: UIFont.systemFont(ofSize: 18))
-        
         if player.timeControlStatus == .paused {
             player.play()
-            playPauseBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: largeButton), for: .normal)
-            miniPlayPauseBtn.setImage(UIImage(systemName: "pause.fill", withConfiguration: miniLargeButton), for: .normal)
+            updatePlayPauseBtnImage(withImageName: "pause.fill")
         } else {
             player.pause()
-            playPauseBtn.setImage(UIImage(systemName: "play.fill",  withConfiguration: largeButton), for: .normal)
-            miniPlayPauseBtn.setImage(UIImage(systemName: "play.fill", withConfiguration: miniLargeButton), for: .normal)
+            updatePlayPauseBtnImage(withImageName: "play.fill")
         }
         
         scaleEpisodeImageView()
