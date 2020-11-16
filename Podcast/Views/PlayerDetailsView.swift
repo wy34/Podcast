@@ -164,7 +164,8 @@ class PlayerDetailsView: UIView {
     func scaleEpisodeImageView() {
         let scale: CGFloat = 0.75
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut) {
-            self.episodeImageView.transform = self.player.timeControlStatus == .playing ? .identity : CGAffineTransform(scaleX: scale, y: scale)
+            let isPreparingToPlayOrPlaying = self.player.timeControlStatus == .waitingToPlayAtSpecifiedRate || self.player.timeControlStatus == .playing
+            self.episodeImageView.transform = isPreparingToPlayOrPlaying ? .identity : CGAffineTransform(scaleX: scale, y: scale)
         }
     }
     
