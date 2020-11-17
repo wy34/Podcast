@@ -62,7 +62,7 @@ extension EpisodesController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let mainTabBarController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController as? MainTabBarController
-        mainTabBarController?.maximizePlayerDetails(episode: episode)
+        mainTabBarController?.maximizePlayerDetails(artist: podcast?.artistName, episode: episode)
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

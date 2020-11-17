@@ -137,7 +137,7 @@ class PlayerDetailsView: UIView {
         configureUI()
         enlargeEpisodeImageView()
         updateEpisodeTime()
-        addTapGestureToMaximizeView()
+        addGestureToMaximizeView()
     }
     
     required init?(coder: NSCoder) {
@@ -219,8 +219,9 @@ class PlayerDetailsView: UIView {
         miniPlayPauseBtn.setDimension(width: miniPlayerView.heightAnchor, height: miniPlayerView.heightAnchor, wMult: 0.5, hMult: 0.5)
     }
     
-    func addTapGestureToMaximizeView() {
+    func addGestureToMaximizeView() {
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
+        self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
     }
     
     func playEpisode() {
@@ -285,6 +286,21 @@ class PlayerDetailsView: UIView {
     
     @objc func handleTapMaximize() {
         let mainTabBarController = UIApplication.shared.windows.filter( { $0.isKeyWindow } ).first?.rootViewController as? MainTabBarController
-        mainTabBarController?.maximizePlayerDetails(episode: nil)
+        mainTabBarController?.maximizePlayerDetails(artist: nil, episode: nil)
+    }
+    
+    @objc func handlePan(gesture: UIPanGestureRecognizer) {
+        if gesture.state == .began {
+            print("began")
+        } else if gesture.state == .changed {
+            let translation = gesture.translation(in: self.superview)
+            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            self.miniPlayerView.alpha = 1 + translation.y / 200
+        } else if gesture.state == .ended {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+                self.transform = .identity
+                self.miniPlayerView.alpha = 1
+            }
+        }
     }
 }

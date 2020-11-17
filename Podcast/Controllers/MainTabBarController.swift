@@ -59,8 +59,9 @@ class MainTabBarController: UITabBarController {
         }
     }
     
-    func maximizePlayerDetails(episode: Episode?) {
+    func maximizePlayerDetails(artist: String?, episode: Episode?) {
         playerDetailView.episode = episode
+        playerDetailView.artistLabel.text = artist
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.tabBar.isHidden = true
             self.maximizedTopAnchorConstraint.isActive = true
