@@ -109,6 +109,7 @@ class PlayerDetailsView: UIView {
     }()
     
     let miniPlayerView = UIView()
+    let miniPlayerSeparatorView = UIView()
     
     private let miniEpisodeImageView: UIImageView = {
         let iv = UIImageView()
@@ -130,6 +131,8 @@ class PlayerDetailsView: UIView {
         stack.spacing = 8
         return stack
     }()
+    
+
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -206,7 +209,11 @@ class PlayerDetailsView: UIView {
         buttonsContainerView.addSubview(buttonStack)
         buttonStack.center(x: buttonsContainerView.centerXAnchor, y: buttonsContainerView.centerYAnchor)
         
-        miniPlayerView.addSubviews(miniPlayerViewStack)
+        miniPlayerView.addSubviews(miniPlayerSeparatorView, miniPlayerViewStack)
+        
+        miniPlayerSeparatorView.setDimension(hConst: 1)
+        miniPlayerSeparatorView.anchor(top: miniPlayerView.topAnchor, right: miniPlayerView.rightAnchor, left: miniPlayerView.leftAnchor)
+        miniPlayerSeparatorView.backgroundColor = #colorLiteral(red: 0.8547367454, green: 0.8496564031, blue: 0.8586423993, alpha: 1)
         
         miniPlayerViewStack.anchor(top: miniPlayerView.topAnchor, right: miniPlayerView.rightAnchor, bottom: miniPlayerView.bottomAnchor, left: miniPlayerView.leftAnchor)
 
@@ -296,10 +303,22 @@ class PlayerDetailsView: UIView {
             let translation = gesture.translation(in: self.superview)
             self.transform = CGAffineTransform(translationX: 0, y: translation.y)
             self.miniPlayerView.alpha = 1 + translation.y / 200
+            self.episodeImageView.alpha = 0 - translation.y / 200
+            self.dismissButton.alpha = 0 - translation.y / 200
         } else if gesture.state == .ended {
+            let translation = gesture.translation(in: self.superview)
+            let velocity = gesture.velocity(in: self.superview)
+            
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
                 self.transform = .identity
-                self.miniPlayerView.alpha = 1
+                if translation.y < -200 || velocity.y < -500 {
+                    let mainTabBarController = UIApplication.shared.windows.filter( { $0.isKeyWindow} ).first?.rootViewController as? MainTabBarController
+                    mainTabBarController?.maximizePlayerDetails(artist: nil, episode: nil)
+                } else {
+                    self.miniPlayerView.alpha = 1
+                    self.episodeImageView.alpha = 0
+                    self.dismissButton.alpha = 0
+                }
             }
         }
     }
