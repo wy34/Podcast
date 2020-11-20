@@ -53,7 +53,7 @@ class MainTabBarController: UITabBarController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.tabBar.isHidden = false
             self.maximizedTopAnchorConstraint.isActive = false
-            self.maximizedBottomAnchorConstraint.constant = self.view.frame.height - 64
+            self.maximizedBottomAnchorConstraint.constant = self.view.frame.height
             self.minimizedTopAnchorConstraint.isActive = true
             self.view.layoutIfNeeded()
             

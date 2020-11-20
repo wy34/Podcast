@@ -134,8 +134,6 @@ class PlayerDetailsView: UIView {
         return stack
     }()
     
-
-    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -230,9 +228,9 @@ class PlayerDetailsView: UIView {
     
     func addGestureToMaximizeView() {
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
+        self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleDismissalPan)))
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        self.addGestureRecognizer(panGesture)
-        panGesture.isEnabled = false
+        miniPlayerView.addGestureRecognizer(panGesture)
     }
     
     func playEpisode() {
@@ -271,23 +269,18 @@ class PlayerDetailsView: UIView {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.transform = .identity
             if translation.y < -200 || velocity.y < -500 {
-                let mainTabBarController = UIApplication.shared.windows.filter( { $0.isKeyWindow} ).first?.rootViewController as? MainTabBarController
-                mainTabBarController?.maximizePlayerDetails(artist: nil, episode: nil)
-                self.panGesture.isEnabled = false
+                UIApplication.mainTabBarController()?.maximizePlayerDetails(artist: nil, episode: nil)
             } else {
                 self.miniPlayerView.alpha = 1
                 self.episodeImageView.alpha = 0
                 self.dismissButton.alpha = 0
-                self.panGesture.isEnabled = true
             }
         }
     }
 
     // MARK: - Selector
     @objc func handleDismiss() {
-        let mainTabBarController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController as? MainTabBarController
-        mainTabBarController?.minimizePlayerDetails()
-        panGesture.isEnabled = true
+        UIApplication.mainTabBarController()?.minimizePlayerDetails()
     }
     
     @objc func handleTimeSliderChanged() {
@@ -324,9 +317,7 @@ class PlayerDetailsView: UIView {
     }
     
     @objc func handleTapMaximize() {
-        let mainTabBarController = UIApplication.shared.windows.filter( { $0.isKeyWindow } ).first?.rootViewController as? MainTabBarController
-        mainTabBarController?.maximizePlayerDetails(artist: nil, episode: nil)
-        panGesture.isEnabled = false
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(artist: nil, episode: nil)
     }
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
@@ -336,6 +327,23 @@ class PlayerDetailsView: UIView {
             handlePanChanged(gesture: gesture)
         } else if gesture.state == .ended {
             handlePanEnded(gesture: gesture)
+        }
+    }
+    
+    @objc func handleDismissalPan(gesture: UIPanGestureRecognizer) {
+        print("dismissal")
+        let translation = gesture.translation(in: self.superview)
+        
+        if gesture.state == .changed && translation.y > 0 {
+            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        } else if gesture.state == .ended {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+                self.transform = .identity
+                
+                if translation.y > 50 {
+                    UIApplication.mainTabBarController()?.minimizePlayerDetails()
+                }
+            }
         }
     }
 }
