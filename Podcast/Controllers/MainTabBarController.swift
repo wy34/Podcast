@@ -12,6 +12,7 @@ class MainTabBarController: UITabBarController {
     let playerDetailView = PlayerDetailsView()
     var maximizedTopAnchorConstraint: NSLayoutConstraint!
     var minimizedTopAnchorConstraint: NSLayoutConstraint!
+    var maximizedBottomAnchorConstraint: NSLayoutConstraint!
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -39,17 +40,20 @@ class MainTabBarController: UITabBarController {
     
     func setupPlayerDetailsView() {
         view.insertSubview(playerDetailView, belowSubview: tabBar)
-        playerDetailView.anchor(right: view.rightAnchor, bottom: view.bottomAnchor, left: view.leftAnchor)
+        playerDetailView.anchor(right: view.rightAnchor, left: view.leftAnchor)
         
         maximizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
         maximizedTopAnchorConstraint.isActive = true
         minimizedTopAnchorConstraint = playerDetailView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -64)
+        maximizedBottomAnchorConstraint = playerDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height)
+        maximizedBottomAnchorConstraint.isActive = true
     }
 
     func minimizePlayerDetails() {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.tabBar.isHidden = false
             self.maximizedTopAnchorConstraint.isActive = false
+            self.maximizedBottomAnchorConstraint.constant = self.view.frame.height - 64
             self.minimizedTopAnchorConstraint.isActive = true
             self.view.layoutIfNeeded()
             
@@ -64,9 +68,10 @@ class MainTabBarController: UITabBarController {
         playerDetailView.artistLabel.text = artist
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.tabBar.isHidden = true
+            self.minimizedTopAnchorConstraint.isActive = false
             self.maximizedTopAnchorConstraint.isActive = true
             self.maximizedTopAnchorConstraint.constant = 0
-            self.minimizedTopAnchorConstraint.isActive = false
+            self.maximizedBottomAnchorConstraint.constant = 0
             self.view.layoutIfNeeded()
             
             self.playerDetailView.dismissButton.alpha = 1
