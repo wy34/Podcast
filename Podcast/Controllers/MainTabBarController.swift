@@ -50,10 +50,10 @@ class MainTabBarController: UITabBarController {
     }
 
     func minimizePlayerDetails() {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+        UIView.animate(withDuration: 0.25) {
             self.tabBar.isHidden = false
             self.maximizedTopAnchorConstraint.isActive = false
-            self.maximizedBottomAnchorConstraint.constant = self.view.frame.height
+            self.maximizedBottomAnchorConstraint.constant = self.view.frame.height - (self.tabBar.frame.size.height + 64)
             self.minimizedTopAnchorConstraint.isActive = true
             self.view.layoutIfNeeded()
             
@@ -66,7 +66,7 @@ class MainTabBarController: UITabBarController {
     func maximizePlayerDetails(artist: String?, episode: Episode?) {
         playerDetailView.episode = episode
         playerDetailView.artistLabel.text = artist
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+        UIView.animate(withDuration: 0.25) {
             self.tabBar.isHidden = true
             self.minimizedTopAnchorConstraint.isActive = false
             self.maximizedTopAnchorConstraint.isActive = true

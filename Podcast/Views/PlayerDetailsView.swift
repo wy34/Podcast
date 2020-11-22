@@ -8,6 +8,7 @@
 import UIKit
 import SDWebImage
 import AVKit
+import MediaPlayer
 
 class PlayerDetailsView: UIView {
     // MARK: - Properties
@@ -141,6 +142,8 @@ class PlayerDetailsView: UIView {
         enlargeEpisodeImageView()
         updateEpisodeTime()
         addGestureToMaximizeView()
+        setupAudioSession()
+        setupRemoteControl()
     }
     
     required init?(coder: NSCoder) {
@@ -148,6 +151,41 @@ class PlayerDetailsView: UIView {
     }
     
     // MARK: - Helpers
+    fileprivate func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let sessionError {
+            print(sessionError.localizedDescription)
+        }
+    }
+    
+    fileprivate func setupRemoteControl() {
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.player.play()
+            self.updatePlayPauseBtnImage(withImageName: "pause.fill")
+            return .success
+        }
+        
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.player.pause()
+            self.updatePlayPauseBtnImage(withImageName: "play.fill")
+            return .success
+        }
+        
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.handlePlayPause()
+            return .success
+        }
+    }
+    
     func updateEpisodeTime() {
         let interval = CMTime(value: 1, timescale: 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
@@ -266,7 +304,7 @@ class PlayerDetailsView: UIView {
         let translation = gesture.translation(in: self.superview)
         let velocity = gesture.velocity(in: self.superview)
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+        UIView.animate(withDuration: 0.25) {
             self.transform = .identity
             if translation.y < -200 || velocity.y < -500 {
                 UIApplication.mainTabBarController()?.maximizePlayerDetails(artist: nil, episode: nil)
@@ -331,13 +369,12 @@ class PlayerDetailsView: UIView {
     }
     
     @objc func handleDismissalPan(gesture: UIPanGestureRecognizer) {
-        print("dismissal")
         let translation = gesture.translation(in: self.superview)
         
         if gesture.state == .changed && translation.y > 0 {
             self.transform = CGAffineTransform(translationX: 0, y: translation.y)
         } else if gesture.state == .ended {
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+            UIView.animate(withDuration: 0.25) {
                 self.transform = .identity
                 
                 if translation.y > 50 {
