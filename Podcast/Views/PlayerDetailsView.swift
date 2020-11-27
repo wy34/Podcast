@@ -17,14 +17,23 @@ class PlayerDetailsView: UIView {
             guard  let episode = episode else { return }
                  
             titleLabel.text = episode.title
+            artistLabel.text = episode.artist
             miniTitleLabel.text = episode.title
             
             guard let imageUrl = episode.imageUrl, let url = URL(string: imageUrl) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
-            miniEpisodeImageView.sd_setImage(with: url, completed: nil)
             playEpisode()
-            
             updatePlayPauseBtnImage(withImageName: "pause.fill")
+            setupNowPlayingInfo()
+            miniEpisodeImageView.sd_setImage(with: url) { (image, _, _, _) in
+                guard let image = image else { return }
+                var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { (_) -> UIImage in
+                    return image
+                }
+                nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            }
         }
     }
     
@@ -168,6 +177,7 @@ class PlayerDetailsView: UIView {
         commandCenter.playCommand.isEnabled = true
         commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
             self.player.play()
+            self.scaleEpisodeImageView()
             self.updatePlayPauseBtnImage(withImageName: "pause.fill")
             return .success
         }
@@ -175,6 +185,7 @@ class PlayerDetailsView: UIView {
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
             self.player.pause()
+            self.scaleEpisodeImageView()
             self.updatePlayPauseBtnImage(withImageName: "play.fill")
             return .success
         }
@@ -186,6 +197,13 @@ class PlayerDetailsView: UIView {
         }
     }
     
+    fileprivate func setupNowPlayingInfo() {
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = episode?.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = episode?.artist
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
     func updateEpisodeTime() {
         let interval = CMTime(value: 1, timescale: 2)
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
@@ -193,7 +211,18 @@ class PlayerDetailsView: UIView {
             self?.maxTimeLabel.text = totalTime.toDisplayString()
             self?.minTimeLabel.text = time.toDisplayString()
             self?.updateDurationSlider()
+            self?.setupLockScreenCurrentTime()
         }
+    }
+    
+    fileprivate func setupLockScreenCurrentTime() {
+        guard let duration = player.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let elapsedTimeInSeconds = CMTimeGetSeconds(player.currentTime())
+        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTimeInSeconds
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     func updateDurationSlider() {

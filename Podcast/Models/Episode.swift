@@ -10,6 +10,7 @@ import FeedKit
 
 struct Episode {
     let title: String
+    var artist: String?
     let pubDate: Date
     let description: String
     var imageUrl: String?
