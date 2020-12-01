@@ -37,6 +37,8 @@ class PlayerDetailsView: UIView {
         }
     }
     
+    var playlistEpisodes = [Episode]()
+    
     private var panGesture: UIPanGestureRecognizer!
     
     private let player: AVPlayer = {
@@ -195,6 +197,29 @@ class PlayerDetailsView: UIView {
             self.handlePlayPause()
             return .success
         }
+        
+        commandCenter.nextTrackCommand.isEnabled = true
+        commandCenter.nextTrackCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.handlePreviousNextTrack(previous: false)
+        }
+        
+        commandCenter.previousTrackCommand.isEnabled = true
+        commandCenter.previousTrackCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            self.handlePreviousNextTrack(previous: true)
+        }
+    }
+    
+    fileprivate func handlePreviousNextTrack(previous: Bool) -> MPRemoteCommandHandlerStatus {
+        if let indexOfCurrentEpisode = self.playlistEpisodes.firstIndex(where: { self.episode?.title == $0.title }) {
+            if indexOfCurrentEpisode != (previous ? 0 :  self.playlistEpisodes.count - 1) {
+                self.episode = self.playlistEpisodes[previous ? indexOfCurrentEpisode - 1 : indexOfCurrentEpisode + 1]
+            } else {
+                self.episode = self.playlistEpisodes[previous ? self.playlistEpisodes.count - 1 : 0]
+            }
+        } else {
+            return .noActionableNowPlayingItem
+        }
+        return .success
     }
     
     fileprivate func setupNowPlayingInfo() {

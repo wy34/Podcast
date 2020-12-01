@@ -63,10 +63,11 @@ class MainTabBarController: UITabBarController {
         }
     }
     
-    func maximizePlayerDetails(artist: String?, episode: Episode?) {
+    func maximizePlayerDetails(artist: String?, episode: Episode?, playlistEpisodes: [Episode] = []) {
         var episode = episode
         episode?.artist = artist
         playerDetailView.episode = episode
+        playerDetailView.playlistEpisodes = playlistEpisodes
         
         UIView.animate(withDuration: 0.25) {
             self.tabBar.isHidden = true
