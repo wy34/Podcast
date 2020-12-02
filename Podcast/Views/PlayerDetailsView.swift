@@ -22,6 +22,7 @@ class PlayerDetailsView: UIView {
             
             guard let imageUrl = episode.imageUrl, let url = URL(string: imageUrl) else { return }
             episodeImageView.sd_setImage(with: url, completed: nil)
+            setupAudioSession()
             playEpisode()
             updatePlayPauseBtnImage(withImageName: "pause.fill")
             setupNowPlayingInfo()
@@ -153,8 +154,9 @@ class PlayerDetailsView: UIView {
         enlargeEpisodeImageView()
         updateEpisodeTime()
         addGestureToMaximizeView()
-        setupAudioSession()
+//        setupAudioSession()
         setupRemoteControl()
+        setupInterruptionObserver()
     }
     
     required init?(coder: NSCoder) {
@@ -181,6 +183,9 @@ class PlayerDetailsView: UIView {
             self.player.play()
             self.scaleEpisodeImageView()
             self.updatePlayPauseBtnImage(withImageName: "pause.fill")
+            
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 1
+            
             return .success
         }
         
@@ -189,6 +194,9 @@ class PlayerDetailsView: UIView {
             self.player.pause()
             self.scaleEpisodeImageView()
             self.updatePlayPauseBtnImage(withImageName: "play.fill")
+            
+            MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0
+            
             return .success
         }
         
@@ -227,6 +235,10 @@ class PlayerDetailsView: UIView {
         nowPlayingInfo[MPMediaItemPropertyTitle] = episode?.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = episode?.artist
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
+    fileprivate func setupInterruptionObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleInterruption), name: AVAudioSession.interruptionNotification, object: nil)
     }
     
     func updateEpisodeTime() {
@@ -435,6 +447,27 @@ class PlayerDetailsView: UIView {
                     UIApplication.mainTabBarController()?.minimizePlayerDetails()
                 }
             }
+        }
+    }
+    
+    @objc func handleInterruption(notification: Notification) {
+        print("interruption observed")
+        guard let userInfo = notification.userInfo else { return }
+        guard let type = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else { return }
+
+        if type == AVAudioSession.InterruptionType.began.rawValue {
+            print("interruption began")
+            updatePlayPauseBtnImage(withImageName: "play.fill")
+        } else {
+            print("Interruption ended")
+
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+
+            if options.contains(.shouldResume) {
+                player.play()
+                updatePlayPauseBtnImage(withImageName: "pause.fill")
+            } 
         }
     }
 }
