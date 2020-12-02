@@ -18,12 +18,14 @@ class EpisodesController: UITableViewController {
         }
     }
     
+    let favoritedPodcastKey = "favoritedPodcastKey"
     var episodes = [Episode]()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+        setupNavigationBarButtons()
     }
     
     // MARK: - Helper
@@ -31,6 +33,7 @@ class EpisodesController: UITableViewController {
         tableView.register(EpisodeCell.self, forCellReuseIdentifier: EpisodeCell.reuseId)
         tableView.tableFooterView = UIView()
         tableView.rowHeight = 132
+        tableView.backgroundColor = UIColor(named: "DarkMode1")
     }
     
     func fetchEpisodes() {
@@ -39,6 +42,31 @@ class EpisodesController: UITableViewController {
             DispatchQueue.main.async {
                 self.episodes = episodes
                 self.tableView.reloadData()
+            }
+        }
+    }
+    
+    fileprivate func setupNavigationBarButtons() {
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Favorite", style: .plain, target: self, action: #selector(handleSaveFavorite)),
+            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchSavedPodcast))
+        ]
+    }
+    
+    // MARK: - Selectors
+    @objc func handleSaveFavorite() {
+        guard let podcast = self.podcast else { return }
+        
+        if let encoded = try? JSONEncoder().encode(podcast) {
+            print("going to save")
+            UserDefaults.standard.setValue(encoded, forKey: favoritedPodcastKey)
+        }
+    }
+    
+    @objc func handleFetchSavedPodcast() {
+        if let data = UserDefaults.standard.data(forKey: favoritedPodcastKey) {
+            if let decoded = try? JSONDecoder().decode(Podcast.self, from: data) {
+                print(decoded.artistName)
             }
         }
     }

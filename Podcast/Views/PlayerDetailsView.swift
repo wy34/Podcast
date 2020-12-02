@@ -51,7 +51,7 @@ class PlayerDetailsView: UIView {
     lazy var dismissButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Dismiss", for: .normal)
-        button.tintColor = .black
+        button.tintColor = UIColor(named: "DarkMode2")
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         return button
@@ -84,8 +84,8 @@ class PlayerDetailsView: UIView {
         return stack
     }()
     
-    private let titleLabel = AlignedTextLabel(withText: "Episode Title", textColor: .black, isBolded: true, fontSize: 20, andAlignment: .center)
-    let artistLabel = AlignedTextLabel(withText: "Author", textColor: #colorLiteral(red: 0.7270483375, green: 0.4584427476, blue: 0.8369832635, alpha: 1), isBolded: true, andAlignment: .center)
+    private let titleLabel = AlignedTextLabel(withText: "Episode Title", textColor: UIColor(named: "DarkMode2")!, isBolded: true, fontSize: 20, andAlignment: .center)
+    let artistLabel = AlignedTextLabel(withText: "Author", textColor: .systemPurple, isBolded: true, andAlignment: .center)
     
     private let backwardsBtn = UIButton.createControlButton(withImage: "gobackward.15")
     private let forwardsBtn = UIButton.createControlButton(withImage: "goforward.15")
@@ -285,7 +285,7 @@ class PlayerDetailsView: UIView {
     }
     
     func configureUI() {
-        backgroundColor = .white
+        backgroundColor = UIColor(named: "DarkMode1")
         
         addSubviews(miniPlayerView, dismissButton, episodeImageView, durationSlider, timeLabelStack, titleLabel, artistLabel, buttonsContainerView, volumeStack)
         

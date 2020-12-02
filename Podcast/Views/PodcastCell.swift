@@ -52,6 +52,7 @@ class PodcastCell: UITableViewCell {
     
     // MARK: - Helper
     func configCell() {
+        backgroundColor = UIColor(named: "DarkMode1")
         addSubviews(podcastImageView, infoStack)
         
         podcastImageView.setDimension(width: heightAnchor, height: heightAnchor, wMult: 0.75, hMult: 0.75)

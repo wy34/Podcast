@@ -55,6 +55,7 @@ class EpisodeCell: UITableViewCell {
     
     // MARK: - Helper
     func configCell() {
+        backgroundColor = UIColor(named: "DarkMode1")
         pubDateLabel.textColor = #colorLiteral(red: 0.6888955235, green: 0.3042449951, blue: 0.8343331814, alpha: 1)
         episodeDescriptionLabel.textColor = #colorLiteral(red: 0.6936373115, green: 0.6968496442, blue: 0.7046937346, alpha: 1)
         

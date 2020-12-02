@@ -48,6 +48,7 @@ class PodcastsSearchController: UITableViewController {
         tableView.register(PodcastCell.self, forCellReuseIdentifier: PodcastCell.reuseId)
         tableView.rowHeight = 132
         tableView.tableFooterView = UIView()
+        tableView.backgroundColor = UIColor(named: "DarkMode1")
     }
     
     func setupSearchBar() {
