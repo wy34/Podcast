@@ -17,8 +17,7 @@ class EpisodesController: UITableViewController {
             fetchEpisodes()
         }
     }
-    
-    let favoritedPodcastKey = "favoritedPodcastKey"
+
     var episodes = [Episode]()
 
     // MARK: - Lifecycle
@@ -48,8 +47,7 @@ class EpisodesController: UITableViewController {
     
     fileprivate func setupNavigationBarButtons() {
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Favorite", style: .plain, target: self, action: #selector(handleSaveFavorite)),
-            UIBarButtonItem(title: "Fetch", style: .plain, target: self, action: #selector(handleFetchSavedPodcast))
+            UIBarButtonItem(title: "Favorite", style: .plain, target: self, action: #selector(handleSaveFavorite))
         ]
     }
     
@@ -57,17 +55,11 @@ class EpisodesController: UITableViewController {
     @objc func handleSaveFavorite() {
         guard let podcast = self.podcast else { return }
         
-        if let encoded = try? JSONEncoder().encode(podcast) {
-            print("going to save")
-            UserDefaults.standard.setValue(encoded, forKey: favoritedPodcastKey)
-        }
-    }
-    
-    @objc func handleFetchSavedPodcast() {
-        if let data = UserDefaults.standard.data(forKey: favoritedPodcastKey) {
-            if let decoded = try? JSONDecoder().decode(Podcast.self, from: data) {
-                print(decoded.artistName)
-            }
+        var listOfPodcasts = UserDefaults.standard.savedPodcasts()
+        listOfPodcasts.append(podcast)
+        
+        if let encoded = try? JSONEncoder().encode(listOfPodcasts) {
+            UserDefaults.standard.setValue(encoded, forKey: UserDefaults.favoritedPodcastKey)
         }
     }
 }

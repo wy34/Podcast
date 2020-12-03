@@ -6,9 +6,21 @@
 //
 
 import UIKit
+import SDWebImage
 
 class FavoritePodcastCell: UICollectionViewCell {
     // MARK: - Properties
+    var podcast: Podcast? {
+        didSet {
+            guard let podcast = podcast else { return }
+            nameLabel.text = podcast.trackName
+            artistNameLabel.text = podcast.artistName
+            
+            let url = URL(string: podcast.artworkUrl600 ?? "")
+            imageView.sd_setImage(with: url, completed: nil)
+        }
+    }
+    
     static let cellId = "FavoritePodcastCell"
     
     private let imageView: UIImageView = {

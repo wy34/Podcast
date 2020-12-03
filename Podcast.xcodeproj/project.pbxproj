@@ -23,6 +23,7 @@
 		3D2905D925678FC00044B394 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2905D825678FC00044B394 /* UIApplication.swift */; };
 		3D2E4C7D2578164800E27E35 /* FavoritePodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2E4C7C2578164800E27E35 /* FavoritePodcastCell.swift */; };
 		3D2E4C8025781B1F00E27E35 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D2E4C7F25781B1F00E27E35 /* Colors.xcassets */; };
+		3D2E4C8325786FC000E27E35 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2E4C8225786FC000E27E35 /* UserDefaults.swift */; };
 		3D38077225771F0A008FE372 /* FavoritesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D38077125771F0A008FE372 /* FavoritesController.swift */; };
 		3D59D1ED255B999400CE74D4 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D59D1EC255B999300CE74D4 /* CMTime.swift */; };
 		3D71DE1B2558F9DA0017F26A /* PlayerDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D71DE1A2558F9DA0017F26A /* PlayerDetailsView.swift */; };
@@ -56,6 +57,7 @@
 		3D2905D825678FC00044B394 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		3D2E4C7C2578164800E27E35 /* FavoritePodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePodcastCell.swift; sourceTree = "<group>"; };
 		3D2E4C7F25781B1F00E27E35 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		3D2E4C8225786FC000E27E35 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		3D38077125771F0A008FE372 /* FavoritesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesController.swift; sourceTree = "<group>"; };
 		3D59D1EC255B999300CE74D4 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		3D71DE1A2558F9DA0017F26A /* PlayerDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDetailsView.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				3DBCC27F255A56D000C6090E /* UIButton.swift */,
 				3D59D1EC255B999300CE74D4 /* CMTime.swift */,
 				3D2905D825678FC00044B394 /* UIApplication.swift */,
+				3D2E4C8225786FC000E27E35 /* UserDefaults.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				3D1D5C29254F985F00E4807A /* AppDelegate.swift in Sources */,
 				3D38077225771F0A008FE372 /* FavoritesController.swift in Sources */,
 				3DBD153D2551CCC700D60F3D /* SearchResults.swift in Sources */,
+				3D2E4C8325786FC000E27E35 /* UserDefaults.swift in Sources */,
 				3D2487C62555F2290070A117 /* Episode.swift in Sources */,
 				3D1D5C41254F98E500E4807A /* MainTabBarController.swift in Sources */,
 				3DBD15412551DA8B00D60F3D /* APIService.swift in Sources */,
