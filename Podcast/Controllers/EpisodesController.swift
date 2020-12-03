@@ -46,9 +46,17 @@ class EpisodesController: UITableViewController {
     }
     
     fileprivate func setupNavigationBarButtons() {
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(title: "Favorite", style: .plain, target: self, action: #selector(handleSaveFavorite))
-        ]
+        let savedPodcasts = UserDefaults.standard.savedPodcasts()
+
+        if let _ = savedPodcasts.firstIndex(where: {$0.trackName == self.podcast?.trackName && $0.artistName == self.podcast?.artistName }) {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "suit.heart.fill"), style: .plain, target: self, action: #selector(handleSaveFavorite))
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Favorite", style: .plain, target: self, action: #selector(handleSaveFavorite))
+        }
+    }
+    
+    fileprivate func showBadgeHighlight() {
+        UIApplication.mainTabBarController()?.viewControllers?[0].tabBarItem.badgeValue = "New"
     }
     
     // MARK: - Selectors
@@ -56,10 +64,16 @@ class EpisodesController: UITableViewController {
         guard let podcast = self.podcast else { return }
         
         var listOfPodcasts = UserDefaults.standard.savedPodcasts()
-        listOfPodcasts.append(podcast)
         
-        if let encoded = try? JSONEncoder().encode(listOfPodcasts) {
-            UserDefaults.standard.setValue(encoded, forKey: UserDefaults.favoritedPodcastKey)
+        if !listOfPodcasts.contains(where: {$0.trackName == podcast.trackName && $0.artistName == podcast.artistName }) {
+            listOfPodcasts.append(podcast)
+            
+            if let encoded = try? JSONEncoder().encode(listOfPodcasts) {
+                UserDefaults.standard.setValue(encoded, forKey: UserDefaults.favoritedPodcastKey)
+            }
+            
+            showBadgeHighlight()
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "suit.heart.fill"), style: .plain, target: self, action: #selector(handleSaveFavorite))
         }
     }
 }

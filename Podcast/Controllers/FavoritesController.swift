@@ -17,6 +17,13 @@ class FavoritesController: UICollectionViewController {
         setupCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        savedPodcasts = UserDefaults.standard.savedPodcasts()
+        collectionView.reloadData()
+        UIApplication.mainTabBarController()?.viewControllers?[0].tabBarItem.badgeValue = nil
+    }
+    
     // MARK: - Helper
     func setupCollectionView() {
         collectionView.backgroundColor = UIColor(named: "DarkMode1")
@@ -34,7 +41,10 @@ class FavoritesController: UICollectionViewController {
             alertController.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (_) in
                 self.savedPodcasts.remove(at: indexOfPress.item)
                 self.collectionView.deleteItems(at: [indexOfPress])
-                UserDefaults.standard.removeObject(forKey: UserDefaults.favoritedPodcastKey)
+                
+                if let encoded = try? JSONEncoder().encode(self.savedPodcasts) {
+                    UserDefaults.standard.setValue(encoded, forKey: UserDefaults.favoritedPodcastKey)
+                }
             }))
             present(alertController, animated: true)
         }
@@ -51,6 +61,12 @@ extension FavoritesController: UICollectionViewDelegateFlowLayout {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoritePodcastCell.cellId, for: indexPath) as! FavoritePodcastCell
         cell.podcast = savedPodcasts[indexPath.row]
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let episodes = EpisodesController()
+        episodes.podcast = self.savedPodcasts[indexPath.row]
+        navigationController?.pushViewController(episodes, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
