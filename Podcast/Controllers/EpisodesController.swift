@@ -109,5 +109,14 @@ extension EpisodesController {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return episodes.isEmpty ? 200: 0
     }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let downloadAction = UIContextualAction(style: .normal, title: "Download") { (action, view, completion) in
+            UserDefaults.standard.downloadEpisode(episode: self.episodes[indexPath.row])
+            completion(true)
+        }
+        
+        return UISwipeActionsConfiguration(actions: [downloadAction])
+    }
 }
 

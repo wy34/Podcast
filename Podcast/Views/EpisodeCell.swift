@@ -29,6 +29,7 @@ class EpisodeCell: UITableViewCell {
     
     private let episodeImageView: UIImageView = {
         let iv = UIImageView()
+        iv.image = #imageLiteral(resourceName: "appicon")
         return iv
     }()
     
