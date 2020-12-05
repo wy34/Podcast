@@ -373,7 +373,7 @@ class PlayerDetailsView: UIView {
         UIView.animate(withDuration: 0.25) {
             self.transform = .identity
             if translation.y < -200 || velocity.y < -500 {
-                UIApplication.mainTabBarController()?.maximizePlayerDetails(artist: nil, episode: nil)
+                UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
             } else {
                 self.miniPlayerView.alpha = 1
                 self.episodeImageView.alpha = 0
@@ -421,7 +421,7 @@ class PlayerDetailsView: UIView {
     }
     
     @objc func handleTapMaximize() {
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(artist: nil, episode: nil)
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
     }
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {

@@ -63,9 +63,7 @@ class MainTabBarController: UITabBarController {
         }
     }
     
-    func maximizePlayerDetails(artist: String?, episode: Episode?, playlistEpisodes: [Episode] = []) {
-        var episode = episode
-        episode?.artist = artist
+    func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         playerDetailView.episode = episode
         playerDetailView.playlistEpisodes = playlistEpisodes
         

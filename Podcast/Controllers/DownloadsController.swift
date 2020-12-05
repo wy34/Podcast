@@ -57,4 +57,9 @@ extension DownloadsController {
         deleteAction.backgroundColor = .red
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = self.downloadedEpisodes.reversed()[indexPath.row]
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.downloadedEpisodes)
+    }
 }

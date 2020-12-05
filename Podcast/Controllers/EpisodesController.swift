@@ -39,7 +39,14 @@ class EpisodesController: UITableViewController {
         guard let feedUrl = podcast?.feedUrl else { return }
         APIService.shared.fetchEpisodes(feedUrl: feedUrl) { (episodes) in
             DispatchQueue.main.async {
-                self.episodes = episodes
+//                self.episodes = episodes
+                
+                self.episodes = episodes.map { (episode) in
+                    var episodeWithArtist = episode
+                    episodeWithArtist.artist = self.podcast?.artistName
+                    return episodeWithArtist
+                }
+                
                 self.tableView.reloadData()
             }
         }
@@ -96,7 +103,7 @@ extension EpisodesController {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let mainTabBarController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController as? MainTabBarController
-        mainTabBarController?.maximizePlayerDetails(artist: podcast?.artistName, episode: episode, playlistEpisodes: self.episodes)
+        mainTabBarController?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.episodes)
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -113,6 +120,7 @@ extension EpisodesController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let downloadAction = UIContextualAction(style: .normal, title: "Download") { (action, view, completion) in
             UserDefaults.standard.downloadEpisode(episode: self.episodes[indexPath.row])
+            APIService.shared.downloadEpisode(episode: self.episodes[indexPath.row])
             completion(true)
         }
         

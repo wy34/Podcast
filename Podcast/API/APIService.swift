@@ -46,4 +46,20 @@ class APIService {
             }
         })
     }
+    
+    func downloadEpisode(episode: Episode) {
+        let downloadRequest = DownloadRequest.suggestedDownloadDestination()
+        
+        AF.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in print(progress.fractionCompleted) }.response { (resp) in
+            if let fileURL = resp.fileURL?.absoluteString {
+                var downloadedEpisodes = UserDefaults.standard.downloadedEpisodes()
+                guard let index = downloadedEpisodes.firstIndex(where: { $0.title == episode.title && $0.artist == episode.artist }) else { return }
+                downloadedEpisodes[index].fileURL = fileURL
+                
+                if let encoded = try? JSONEncoder().encode(downloadedEpisodes) {
+                    UserDefaults.standard.setValue(encoded, forKey: UserDefaults.downloadedEpisodeKey)
+                }
+            }
+        }
+    }
 }
