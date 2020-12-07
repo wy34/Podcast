@@ -39,8 +39,6 @@ class EpisodesController: UITableViewController {
         guard let feedUrl = podcast?.feedUrl else { return }
         APIService.shared.fetchEpisodes(feedUrl: feedUrl) { (episodes) in
             DispatchQueue.main.async {
-//                self.episodes = episodes
-                
                 self.episodes = episodes.map { (episode) in
                     var episodeWithArtist = episode
                     episodeWithArtist.artist = self.podcast?.artistName
@@ -118,10 +116,15 @@ extension EpisodesController {
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let episodeToDownload = episodes[indexPath.row]
+        
         let downloadAction = UIContextualAction(style: .normal, title: "Download") { (action, view, completion) in
-            UserDefaults.standard.downloadEpisode(episode: self.episodes[indexPath.row])
-            APIService.shared.downloadEpisode(episode: self.episodes[indexPath.row])
-            completion(true)
+            if !UserDefaults.standard.downloadedEpisodes().contains(where: { $0.title == episodeToDownload.title && $0.artist == episodeToDownload.artist }) {
+                UserDefaults.standard.downloadEpisode(episode: self.episodes[indexPath.row])
+                APIService.shared.downloadEpisode(episode: self.episodes[indexPath.row])
+                completion(true)
+            }
+            completion(false)
         }
         
         return UISwipeActionsConfiguration(actions: [downloadAction])

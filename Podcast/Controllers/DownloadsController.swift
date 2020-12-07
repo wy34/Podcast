@@ -52,6 +52,7 @@ extension DownloadsController {
             if let encoded = try? JSONEncoder().encode(self.downloadedEpisodes) {
                 UserDefaults.standard.setValue(encoded, forKey: UserDefaults.downloadedEpisodeKey)
             }
+            // dont forget to delete from documents directory as well
             completion(true)
         }
         deleteAction.backgroundColor = .red
@@ -60,6 +61,16 @@ extension DownloadsController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = self.downloadedEpisodes.reversed()[indexPath.row]
-        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.downloadedEpisodes)
+        
+        if episode.fileURL != nil {
+            UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.downloadedEpisodes)
+        } else {
+            let alert = UIAlertController(title: "File URL not found", message: "Cannot find local file, play using stream url instead", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (_) in
+                UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.downloadedEpisodes)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
     }
 }
