@@ -49,7 +49,10 @@ class APIService {
     
     func downloadEpisode(episode: Episode) {
         let downloadRequest = DownloadRequest.suggestedDownloadDestination()
-        AF.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in print(progress.fractionCompleted) }.response { (resp) in
+        AF.download(episode.streamUrl, to: downloadRequest).downloadProgress { (progress) in
+            NotificationCenter.default.post(name: .downloadProgress, object: nil, userInfo: ["title": episode.title, "progress": progress.fractionCompleted])
+        }.response { (resp) in
+            print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.absoluteString)
             if let fileURL = resp.fileURL?.absoluteString {
                 var downloadedEpisodes = UserDefaults.standard.downloadedEpisodes()
                 guard let index = downloadedEpisodes.firstIndex(where: { $0.title == episode.title && $0.artist == episode.artist }) else { return }
@@ -58,7 +61,15 @@ class APIService {
                 if let encoded = try? JSONEncoder().encode(downloadedEpisodes) {
                     UserDefaults.standard.setValue(encoded, forKey: UserDefaults.downloadedEpisodeKey)
                 }
+                
+                let episodeDownloadCompleteTuple = (resp.fileURL?.absoluteString, episode.title)
+                NotificationCenter.default.post(name: .downloadComplete, object: episodeDownloadCompleteTuple, userInfo: nil)
             } 
         }
     }
+}
+
+extension Notification.Name {
+    static let downloadProgress = Notification.Name("downloadProgress")
+    static let downloadComplete = Notification.Name("downloadComplete")
 }

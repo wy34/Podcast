@@ -44,6 +44,15 @@ class EpisodeCell: UITableViewCell {
         return stack
     }()
     
+    let progressLabel: UILabel = {
+        let label = UILabel()
+        label.text = "100%"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.isHidden = true
+        return label
+    }()
+    
     // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -60,7 +69,7 @@ class EpisodeCell: UITableViewCell {
         pubDateLabel.textColor = #colorLiteral(red: 0.6888955235, green: 0.3042449951, blue: 0.8343331814, alpha: 1)
         episodeDescriptionLabel.textColor = #colorLiteral(red: 0.6936373115, green: 0.6968496442, blue: 0.7046937346, alpha: 1)
         
-        addSubviews(episodeImageView, infoStack)
+        addSubviews(episodeImageView, infoStack, progressLabel)
         
         episodeImageView.setDimension(width: heightAnchor, height: heightAnchor, wMult: 0.75, hMult: 0.75)
         episodeImageView.center(to: self, by: .centerX, withMultiplierOf: 0.35)
@@ -68,5 +77,8 @@ class EpisodeCell: UITableViewCell {
         
         infoStack.center(to: episodeImageView, by: .centerY)
         infoStack.anchor(right: rightAnchor, left: episodeImageView.rightAnchor, paddingRight: 15, paddingLeft: 15)
+        
+        progressLabel.center(to: episodeImageView, by: .centerX)
+        progressLabel.center(to: episodeImageView, by: .centerY)
     }
 }

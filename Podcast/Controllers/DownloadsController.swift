@@ -23,6 +23,7 @@ class DownloadsController: UITableViewController {
         super.viewWillAppear(animated)
         downloadedEpisodes = UserDefaults.standard.downloadedEpisodes()
         tableView.reloadData()
+        setupObservers()
     }
 
     // MARK: - Helper
@@ -30,6 +31,34 @@ class DownloadsController: UITableViewController {
         tableView.backgroundColor = UIColor(named: "DarkMode1")
         tableView.register(EpisodeCell.self, forCellReuseIdentifier: cellId)
         tableView.rowHeight = 134
+    }
+    
+    func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadProgress), name: .downloadProgress, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleDownloadComplete), name: .downloadComplete, object: nil)
+    }
+    
+    // MARK: - Selectors
+    @objc func handleDownloadProgress(notification: Notification) {
+        guard let userInfo = notification.userInfo as? [String: Any] else { return }
+        guard let progress = userInfo["progress"] as? Double else { return }
+        guard let title = userInfo["title"] as? String else { return }
+        
+        guard let index = Array(downloadedEpisodes).firstIndex(where: { $0.title == title }) else { return }
+        
+        guard let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0)) as? EpisodeCell else { return }
+        cell.progressLabel.isHidden = false
+        cell.progressLabel.text = "\(Int(progress * 100))%"
+        
+        if progress == 1 {
+            cell.progressLabel.isHidden = true
+        }
+    }
+    
+    @objc func handleDownloadComplete(notification: Notification) {
+        guard let episodeDownloadComplete = notification.object as? (String, String) else { return }
+        guard let index = downloadedEpisodes.firstIndex(where: { $0.title == episodeDownloadComplete.1 }) else { return }
+        downloadedEpisodes[index].fileURL = episodeDownloadComplete.0
     }
 }
 
@@ -41,7 +70,7 @@ extension DownloadsController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! EpisodeCell
-        cell.episode = downloadedEpisodes.reversed()[indexPath.row]
+        cell.episode = downloadedEpisodes[indexPath.row]
         return cell
     }
     
@@ -52,15 +81,14 @@ extension DownloadsController {
             if let encoded = try? JSONEncoder().encode(self.downloadedEpisodes) {
                 UserDefaults.standard.setValue(encoded, forKey: UserDefaults.downloadedEpisodeKey)
             }
-            // dont forget to delete from documents directory as well
-            completion(true)
         }
         deleteAction.backgroundColor = .red
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let episode = self.downloadedEpisodes.reversed()[indexPath.row]
+        let episode = self.downloadedEpisodes[indexPath.row]
+        print(episode.fileURL)
         
         if episode.fileURL != nil {
             UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: episode, playlistEpisodes: self.downloadedEpisodes)
